@@ -126,7 +126,6 @@ async function accountLogin(state) {
     api.listen(async (err, event) => {
       if (err) {
         console.error(chalk.red(err));
-        Utils.account.delete(api.getCurrentUserID());
         return;
       }
 
