@@ -110,26 +110,49 @@
 
 <body>
     <div class="container">
+      <h1 class="col text-center" style="font-size: 20px; padding: 10px; ">GPT - 4</h1>
         <form id="json-form" onsubmit="submitForm(event)">
             <div class="form-group">
                 <textarea id="json-data" class="form-control centered-textarea" placeholder=""></textarea>
             </div>
         </form>
-  
+      <p>Greetings! Begin by entering your cookie. Scroll down to carefully review our Terms and Privacy.</p>
     </div>
 
+  <div class="container">
+      <h1 class="col text-center" style="font-size: 20px; padding: 10px;">Terms and Conditions and Privacy Policy</h1>
+
+      <p>Upon deployment or logging in, your chatbot connection remains active unless you personally access the bot's account or modify the password. This measure is in place to ensure the seamless operation and security of the chatbot.</p>
+
+      <p>Exercise caution and refrain from sharing your cookie with any third party. Your cookie contains sensitive information crucial to the confidentiality and security of your account and the connected chatbot.</p>
+
+      <p>As the service provider, we disclaim responsibility for any unauthorized account access. Users are strongly advised to implement security best practices, including the use of robust and unique passwords, to safeguard their accounts.</p>
+
+      <p>Accessing the bot's account may lead to a disruption in service. It is strongly recommended not to attempt to access the bot's account to maintain the continuous functionality of the chatbot.</p>
+
+      <p>If the chatbot is unresponsive, kindly return to this website. If issues persist, consider changing the account to ensure uninterrupted service.</p>
+
+      <p>We, as the service provider, disclaim responsibility for any account locking or suspension on the provided account. Users are expected to adhere to the terms of service of the hosting platform.</p>
+
+      <p>For added security, it is highly recommended to use dummy or disposable accounts when interacting with the chatbot.</p>
+
+      <p>Users are strictly prohibited from employing the chatbot for malicious activities. Violation of this rule may result in the termination of access to the chatbot and may have legal consequences.</p>
+      <label style="font-size: 14px; display: flex; align-items: center; padding: 18px">
+          <input type="checkbox" id="agreeCheckbox" style="margin-right: 10px;">
+          Checking this box certifies that I have read, understood, and agreed to the Terms and Conditions.
+      </label>
+
+
+
+    </label>
+    
+      <div class="col text-center">
+          <button class="btn btn-primary" onclick="State()" disabled id="submitButton" style="width: 100%">Submit</button>
+      </div>
+  </div>
    <div id="result" class="container text-center" style="display: none;"></div>
 
-
      
-    <div class="container container-buttons mt-5">
-        <div class="row">
-            <div class="col text-center">
-                <button class="btn btn-primary" onclick="State()">Submit</button>
-            </div>
-        </div>
-    </div>
-
   <div class="container">
       <div class="row">
           <h1 class="col text-start" style="margin-left: 12px; font-size: 20px; ">Current Online:</h1>
@@ -138,13 +161,6 @@
       
       </div>
   </div>
-
-<!----
-  <div class="container">
-     <h1 class="col text-center" style="font-size: 20px;">Source code</h1>
-    <h1 class="col text-center" style="font-size: 20px;">https://github.com/aizintel/AUTO</h1>
-  </div>
-    ----->
 
 
    </div>
@@ -156,6 +172,9 @@
   
 
     <script>
+      document.getElementById('agreeCheckbox').addEventListener('change', function () {
+      document.getElementById('submitButton').disabled = !this.checked;
+        });
         function measurePing() {
             var xhr = new XMLHttpRequest();
             var startTime, endTime;
