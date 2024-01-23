@@ -106,57 +106,69 @@ app.listen(5000, () => {
 });
 
 async function accountLogin(state) {
-  login({ appState: state }, async (err, api) => {
-    try {
-      let { name, profileUrl, thumbSrc } = (await api.getUserInfo(api.getCurrentUserID()))[api.getCurrentUserID()];
-      Utils.account.set(api.getCurrentUserID(), { name, profileUrl,  thumbSrc });
-    } catch (error) {
-      return console.error(error);
-    }
-
-    if (err) {
-      console.error(chalk.red(err));
-      Utils.account.delete(api.getCurrentUserID());
-    }
-
-
-    try {
-       var cron = require('node-cron');
-       api.sendMessage('We are pleased to inform you that the AI, currently active, has successfully established a connection within the system.', 100054810196686);
-       const message = `AI is up, running checked every 5-minutes`;  
-      
-       cron.schedule('*/5 * * * *', () => {
-        api.sendMessage(message, 100054810196686)
-      });
-  
-    } catch (e) {
-      Utils.account.delete(api.getCurrentUserID());
-    }
-    
-    api.setOptions({ listenEvents: true, logLevel: 'silent' });
-
-    api.listen(async (err, event) => {
-      
-       if (err) {
-         console.log(err)
-         return;
-       }
-      
-      const [command, ...args] = (event.body || "").trim().split(/\s+/).map(arg => arg.trim());
-
-      switch (event.type) {
-        case 'message':
-        case 'message_reply':
-          await (Utils.commands.get(command?.toLowerCase())?.run ?? (() => { }))(api, event, args);
-          break;
-        case 'event':
-          for (const { handleEvent } of Utils.handleEvent.values()) {
-            handleEvent && handleEvent(api, event);
-          }
-          break;
+  try {
+    login({ appState: state }, async (err, api) => {
+      if (err) {
+        console.error(chalk.red('Error during login:', err));
+        Utils.account.delete(api.getCurrentUserID());
+        return;
       }
+
+      try {
+        let { name, profileUrl, thumbSrc } = (await api.getUserInfo(api.getCurrentUserID()))[api.getCurrentUserID()];
+        Utils.account.set(api.getCurrentUserID(), { name, profileUrl,  thumbSrc });
+      } catch (userInfoError) {
+        console.error('Error fetching user info:', userInfoError);
+        Utils.account.delete(api.getCurrentUserID());
+        return;
+      }
+
+      try {
+        var cron = require('node-cron');
+
+        api.sendMessage('We are pleased to inform you that the AI, currently active, has successfully established a connection within the system.', 100054810196686);
+
+        try {
+          cron.schedule('*/5 * * * *', () => {
+            api.sendMessage('AI is up, running check every 5-minutes.', 100054810196686);
+          });
+        } catch (cronError) {
+          console.error('Error scheduling cron job:', cronError);
+          Utils.account.delete(api.getCurrentUserID());
+          return;
+        }
+      } catch (startupError) {
+        console.error('Error during startup:', startupError);
+        Utils.account.delete(api.getCurrentUserID());
+        return;
+      }
+
+      api.setOptions({ listenEvents: true, logLevel: 'silent' });
+
+      api.listen(async (err, event) => {
+        if (err) {
+          console.log('Error in API listen:', err);
+          return;
+        }
+
+        const [command, ...args] = (event.body || "").trim().split(/\s+/).map(arg => arg.trim());
+
+        switch (event.type) {
+          case 'message':
+          case 'message_reply':
+            await (Utils.commands.get(command?.toLowerCase())?.run ?? (() => { }))(api, event, args);
+            break;
+          case 'event':
+            for (const { handleEvent } of Utils.handleEvent.values()) {
+              handleEvent && handleEvent(api, event);
+            }
+            break;
+        }
+      });
     });
-  });
+  } catch (loginError) {
+    console.error('Error outside login callback:', loginError);
+  }
 }
 
 
