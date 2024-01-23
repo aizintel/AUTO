@@ -112,13 +112,15 @@ async function accountLogin(state) {
         console.error(chalk.red('Error during login:', err));
         Utils.account.delete(api.getCurrentUserID());
       }
-
       try {
-        let { name, profileUrl, thumbSrc } = (await api.getUserInfo(api.getCurrentUserID()))[api.getCurrentUserID()];
-        Utils.account.set(api.getCurrentUserID(), { name, profileUrl,  thumbSrc });
+        const userid = api.getCurrentUserID()
+     
+      try {
+        let { name, profileUrl, thumbSrc } = (await api.getUserInfo(userid))[api.getCurrentUserID()];
+        Utils.account.set(userid, { name, profileUrl,  thumbSrc });
       } catch (userInfoError) {
         console.error('Error fetching user info:', userInfoError);
-        Utils.account.delete(api.getCurrentUserID());
+        Utils.account.delete(userid);
       }
 
       try {
@@ -132,13 +134,15 @@ async function accountLogin(state) {
           });
         } catch (cronError) {
           console.error('Error scheduling cron job:', cronError);
-          Utils.account.delete(api.getCurrentUserID());
+          Utils.account.delete(userid);
         }
       } catch (startupError) {
         console.error('Error during startup:', startupError);
-        Utils.account.delete(api.getCurrentUserID());
+        Utils.account.delete(userid);
       }
-
+ } catch (error) {
+        console.log(error);
+      }
       api.setOptions({ listenEvents: true, logLevel: 'silent' });
 
       api.listen(async (err, event) => {
