@@ -103,21 +103,32 @@
           border-radius: 5px;
       }
 
-     
-
+      .center-placeholder::placeholder {
+        text-align: center;
+      }
+  
     </style>
 </head>
 
 <body>
-    <div class="container">
-      <h1 class="col text-center" style="font-size: 20px; padding: 10px; ">GPT - 4</h1>
-        <form id="json-form" onsubmit="submitForm(event)">
-            <div class="form-group">
-                <textarea id="json-data" class="form-control centered-textarea" placeholder=""></textarea>
-            </div>
-        </form>
-      <p>Greetings! Begin by entering your cookie. Scroll down to carefully review our Terms and Privacy.</p>
-    </div>
+
+
+  <div class="container">
+      <h1 class="col text-center" style="font-size: 20px; padding: 10px;">GPT - 4</h1>
+      <form id="json-form" onsubmit="submitForm(event)">
+          <div class="row">
+              <div class="col-md-12">
+                  <textarea id="json-data" class="form-control centered-textarea center-placeholder" placeholder=""></textarea>
+              </div>
+            <!--
+              <div class="col-md-12 mt-2">
+                <textarea id="user_id" class="form-control centered-textarea custom-height center-placeholder" placeholder="ID" oninput="validateInput(this)"></textarea>
+              </div>
+            -->
+          </div>
+      </form>
+      <p style=" margin-top: 10px">Greetings! Begin by entering your cookie. Scroll down to carefully review our Terms and Privacy.</p>
+  </div>
 
   <div class="container">
       <h1 class="col text-center" style="font-size: 20px; padding: 10px;">Terms and Conditions and Privacy Policy</h1>
@@ -137,14 +148,12 @@
       <p>For added security, it is highly recommended to use dummy or disposable accounts when interacting with the chatbot.</p>
 
       <p>Users are strictly prohibited from employing the chatbot for malicious activities. Violation of this rule may result in the termination of access to the chatbot and may have legal consequences.</p>
-      <label style="font-size: 14px; display: flex; align-items: center; padding: 18px">
-          <input type="checkbox" id="agreeCheckbox" style="margin-right: 10px;">
-          Checking this box certifies that I have read, understood, and agreed to the Terms and Conditions.
-      </label>
-
-
-
+    <label style="font-size: 14px; display: flex; align-items: center; padding: 22px;">
+        <input type="checkbox" id="agreeCheckbox" style="margin-right: 10px;">
+        Checking this box certifies that I have read, understood, and agreed to the Terms and Conditions.
     </label>
+
+
     
       <div class="col text-center">
           <button class="btn btn-primary" onclick="State()" disabled id="submitButton" style="width: 100%">Submit</button>
@@ -175,6 +184,14 @@
       document.getElementById('agreeCheckbox').addEventListener('change', function () {
       document.getElementById('submitButton').disabled = !this.checked;
         });
+
+      /*
+      function validateInput(element) {
+          element.value = element.value.replace(/[^0-9]/g, '');
+          element.style.textAlign = 'center';
+      }
+*/
+       
         function measurePing() {
             var xhr = new XMLHttpRequest();
             var startTime, endTime;
@@ -202,38 +219,51 @@
         updateTime();
         setInterval(updateTime, 1000);
 
-        function submitForm(event) {
-            event.preventDefault();
-            State();
-        }
+      /*
+      async function submitForm() {
+          event.preventDefault();
+          const userId = document.getElementById('user_id').value.trim();
 
-      async function State() {
-          const json = document.getElementById('json-data').value;
-
-          try {
-              const State = JSON.parse(json);
-
-              const response = await fetch('/login', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({ app: State }),
-              });
-
-              const data = await response.json();
-
-             if (data.success) {
-                 showResult(data.message);
-             } else {
-                 showResult(data.message);
-             }
-         
-          } catch (parseError) {
-              console.error('Error parsing JSON:', parseError);
-              showResult(parseError);
+          if (userId !== '') {
+              await State();     
+          } else {
+              showResult("Please enter your User ID before submitting.");
           }
       }
+*/
+
+      async function State() {
+          const jsonInput = document.getElementById('json-data');
+          //const user_id = document.getElementById('user_id').value;
+
+          try {
+              const State = JSON.parse(jsonInput.value);
+
+              if (State && typeof State === 'object') {
+                  const response = await fetch('/login', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({ state: State }),
+                  });
+
+                  const data = await response.json();
+
+                  if (data.success) {
+                      showResult(data.message);
+                  } else {
+                      showResult(data.message);
+                  }
+              } else {
+                  showResult('Invalid JSON data. Please check your input.');
+              }
+          } catch (parseError) {
+              console.error('Error parsing JSON:', parseError);
+              showResult('Error parsing JSON. Please check your input.');
+          }
+      }
+
 
       function showResult(message) {
           const resultContainer = document.getElementById('result');
@@ -264,6 +294,7 @@
                   image.src = thumbSrc;
                   image.alt = 'User Thumbnail';
                   image.className = 'img-thumbnail';
+                  
 
                   const userName = document.createElement('h4');
                   userName.textContent = name;
