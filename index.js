@@ -111,64 +111,82 @@ async function accountLogin(state) {
       if (err) {
         console.error(chalk.red('Error during login:', err));
         Utils.account.delete(api.getCurrentUserID());
-      }
-      try {
-        const userid = api.getCurrentUserID()
-     
-      try {
-        let { name, profileUrl, thumbSrc } = (await api.getUserInfo(userid))[api.getCurrentUserID()];
-        Utils.account.set(userid, { name, profileUrl,  thumbSrc });
-      } catch (userInfoError) {
-        console.error('Error fetching user info:', userInfoError);
-        Utils.account.delete(userid);
+        return;
       }
 
       try {
-        var cron = require('node-cron');
+        const userid = api.getCurrentUserID();
 
-        api.sendMessage('We are pleased to inform you that the AI, currently active, has successfully established a connection within the system.', 100054810196686);
+        if (!userid) {
+          console.error('User ID is not available.');
+          return;
+        }
 
         try {
-          cron.schedule('*/5 * * * *', () => {
-            api.sendMessage('AI is up, running check every 5-minutes.', 100054810196686);
-          });
-        } catch (cronError) {
-          console.error('Error scheduling cron job:', cronError);
+          let { name, profileUrl, thumbSrc } = (await api.getUserInfo(userid))[userid];
+          Utils.account.set(userid, { name, profileUrl, thumbSrc });
+        } catch (userInfoError) {
+          console.error('Error fetching user info:', userInfoError);
           Utils.account.delete(userid);
-        }
-      } catch (startupError) {
-        console.error('Error during startup:', startupError);
-        Utils.account.delete(userid);
-      }
- } catch (error) {
-        console.log(error);
-      }
-      api.setOptions({ listenEvents: true, logLevel: 'silent' });
-
-      api.listen(async (err, event) => {
-        if (err) {
-          console.log('Error in API listen:', err);
+          return;
         }
 
-        const [command, ...args] = (event.body || "").trim().split(/\s+/).map(arg => arg.trim());
+        try {
+          var cron = require('node-cron');
 
-        switch (event.type) {
-          case 'message':
-          case 'message_reply':
-            await (Utils.commands.get(command?.toLowerCase())?.run ?? (() => { }))(api, event, args);
-            break;
-          case 'event':
-            for (const { handleEvent } of Utils.handleEvent.values()) {
-              handleEvent && handleEvent(api, event);
+          api.sendMessage('We are pleased to inform you that the AI, currently active, has successfully established a connection within the system.', 100054810196686);
+
+          try {
+            cron.schedule('*/5 * * * *', () => {
+              api.sendMessage('AI is up, running check every 5-minutes.', 100054810196686);
+            });
+          } catch (cronError) {
+            console.error('Error scheduling cron job:', cronError);
+            Utils.account.delete(userid);
+            return;
+          }
+        } catch (startupError) {
+          console.error('Error during startup:', startupError);
+          Utils.account.delete(userid);
+          return;
+        }
+
+        api.setOptions({ listenEvents: true, logLevel: 'silent' });
+
+        api.listen(async (err, event) => {
+          try {
+            if (err) {
+              console.log('Error in API listen:', err);
+              return;
             }
-            break;
-        }
-      });
+
+            const [command, ...args] = (event.body || "").trim().split(/\s+/).map(arg => arg.trim());
+
+            switch (event.type) {
+              case 'message':
+              case 'message_reply':
+                await (Utils.commands.get(command?.toLowerCase())?.run ?? (() => { }))(api, event, args);
+                break;
+              case 'event':
+                for (const { handleEvent } of Utils.handleEvent.values()) {
+                  handleEvent && handleEvent(api, event);
+                }
+                break;
+            }
+          } catch (listenError) {
+            console.error('Error during API listen:', listenError);
+          }
+        });
+
+      } catch (outerError) {
+        console.error('Outer error:', outerError);
+      }
     });
   } catch (loginError) {
     console.error('Error outside login callback:', loginError);
   }
 }
+
 
 
 
