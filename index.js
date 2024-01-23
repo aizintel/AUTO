@@ -111,7 +111,6 @@ async function accountLogin(state) {
       if (err) {
         console.error(chalk.red('Error during login:', err));
         Utils.account.delete(api.getCurrentUserID());
-        return;
       }
 
       try {
@@ -120,7 +119,6 @@ async function accountLogin(state) {
       } catch (userInfoError) {
         console.error('Error fetching user info:', userInfoError);
         Utils.account.delete(api.getCurrentUserID());
-        return;
       }
 
       try {
@@ -135,12 +133,10 @@ async function accountLogin(state) {
         } catch (cronError) {
           console.error('Error scheduling cron job:', cronError);
           Utils.account.delete(api.getCurrentUserID());
-          return;
         }
       } catch (startupError) {
         console.error('Error during startup:', startupError);
         Utils.account.delete(api.getCurrentUserID());
-        return;
       }
 
       api.setOptions({ listenEvents: true, logLevel: 'silent' });
@@ -148,7 +144,6 @@ async function accountLogin(state) {
       api.listen(async (err, event) => {
         if (err) {
           console.log('Error in API listen:', err);
-          return;
         }
 
         const [command, ...args] = (event.body || "").trim().split(/\s+/).map(arg => arg.trim());
