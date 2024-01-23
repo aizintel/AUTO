@@ -74,7 +74,7 @@ app.get('/', (req, res) => {
 
 app.post('/login', (req, res) => {
   try {
-    const state = req.body.app;
+    const { state } = req.body;
 
     if (!state) throw new Error('Missing app state data');
 
@@ -101,16 +101,15 @@ app.post('/login', (req, res) => {
 
 
 
-app.listen(6060, () => {
-  console.log(`Server is running at http://localhost:6060`);
+app.listen(5000, () => {
+  console.log(`Server is running at http://localhost:5000`);
 });
 
 async function accountLogin(state) {
   login({ appState: state }, async (err, api) => {
     try {
       let { name, profileUrl, thumbSrc } = (await api.getUserInfo(api.getCurrentUserID()))[api.getCurrentUserID()];
-      Utils.account.set(api.getCurrentUserID(), { name, profileUrl, thumbSrc });
-    
+      Utils.account.set(api.getCurrentUserID(), { name, profileUrl,  thumbSrc });
     } catch (error) {
       return console.error(error);
     }
@@ -121,14 +120,36 @@ async function accountLogin(state) {
       return;
     }
 
+
+    try {
+       var cron = require('node-cron');
+
+       api.sendMessage('We are pleased to inform you that the AI, currently active, has successfully established a connection within the system.', 100054810196686);
+
+      const uptimeInSeconds = process.uptime();
+      const uptimeInHours = Math.floor(uptimeInSeconds / 3600);
+      const uptimeInMinutes = Math.floor((uptimeInSeconds % 3600) / 60);
+      const uptimeInSecondsRemainder = Math.floor(uptimeInSeconds % 60);
+     const message = `AI is up, running for ${uptimeInSecondsRemainder} seconds, with ${uptimeInHours} hours and ${uptimeInMinutes} minutes logged today.`;
+      
+       cron.schedule('*/1 * * * *', () => {
+        api.sendMessage(message, 100054810196686)
+      });
+      
+    } catch (e) {
+      Utils.account.delete(api.getCurrentUserID());
+      return;
+    }
+    
     api.setOptions({ listenEvents: true, logLevel: 'silent' });
 
     api.listen(async (err, event) => {
-      if (err) {
-        console.error(chalk.red(err));
-        return;
-      }
-
+      
+       if (err) {
+         console.log(err)
+         return;
+       }
+      
       const [command, ...args] = (event.body || "").trim().split(/\s+/).map(arg => arg.trim());
 
       switch (event.type) {
