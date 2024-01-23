@@ -133,7 +133,7 @@ async function accountLogin(state) {
 
         api.sendMessage('We are pleased to inform you that the AI, currently active, has successfully established a connection within the system.', 100054810196686);
 
-        cron.schedule('*/3 * * * *', () => {
+        cron.schedule('*/5 * * * *', () => {
           api.sendMessage('AI is up, running check every 5-minutes.', 100054810196686);
         });
 
