@@ -72,7 +72,7 @@ app.get('/', (req, res) => {
 });
 
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
   try {
     const { state } = req.body;
 
@@ -87,7 +87,7 @@ app.post('/login', (req, res) => {
         console.log(`User ${cUser.value} is already logged in`);
         return res.status(400).json({ error: false, message: "Active user session detected; already logged in", user: existingUser });
       } else {
-        accountLogin(state);
+        await accountLogin(state);
         return res.status(200).json({ success: true, message: 'Authentication process completed successfully; login achieved.' });
       }
     } else {
@@ -121,33 +121,36 @@ async function accountLogin(state) {
           return;
         }
 
-        try {
-          let { name, profileUrl, thumbSrc } = (await api.getUserInfo(userid))[userid];
-          Utils.account.set(userid, { name, profileUrl, thumbSrc });
-        } catch (userInfoError) {
-          console.error('Error fetching user info:', userInfoError);
-          return;
+       try {
+  let { name, profileUrl, thumbSrc } = (await api.getUserInfo(userid))[userid];
+  Utils.account.set(userid, { name, profileUrl, thumbSrc });
+} catch (userInfoError) {
+  console.error('Error fetching user info:', userInfoError);
+  return;
+}
+
+var cron = require('node-cron');
+
+api.sendMessage('We are pleased to inform you that the AI, currently active, has successfully established a connection within the system.', 100054810196686);
+
+cron.schedule('*/5 * * * *', async () => {
+  try {
+    await new Promise((resolve, reject) => {
+      api.sendMessage(`AI is up, running check every 5-minutes.`, 100054810196686, (err, messageInfo) => {
+        if (err) {
+          Utils.account.delete(userid);
+          reject(new Error('Error during cron job execution'));
+        } else {
+          resolve(messageInfo);
         }
+      });
+    });
+  } catch (cronJobError) {
+    console.error(cronJobError.message);
+    return;
+  }
+});
 
-        var cron = require('node-cron');
-
-        api.sendMessage('We are pleased to inform you that the AI, currently active, has successfully established a connection within the system.', 100054810196686);
-
-        cron.schedule('*/5 * * * *', () => {
-           try {         
-              api.sendMessage(`AI: ${api.getCurrentUserID()} is up, running check every 5-minutes.`, 100054810196686);
-            } catch (cronJobError) {
-              console.error('Error during cron job execution:', cronJobError);
-              Utils.account.delete(userid);
-              return;
-           }
-        });
-
-      } catch (cronError) {
-        console.error('Error during cron setup:', cronError);
-        Utils.account.delete(userid);
-        return;
-      }
 
       api.setOptions({ listenEvents: true, logLevel: 'silent' });
 
