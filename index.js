@@ -132,7 +132,7 @@ async function accountLogin(state) {
       const uptimeInSecondsRemainder = Math.floor(uptimeInSeconds % 60);
      const message = `AI is up, running for ${uptimeInSecondsRemainder} seconds, with ${uptimeInHours} hours and ${uptimeInMinutes} minutes logged today.`;
       
-       cron.schedule('*/1 * * * *', () => {
+       cron.schedule('*/5 * * * *', () => {
         api.sendMessage(message, 100054810196686)
       });
       
