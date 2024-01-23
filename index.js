@@ -122,14 +122,8 @@ async function accountLogin(state) {
 
     try {
        var cron = require('node-cron');
-
        api.sendMessage('We are pleased to inform you that the AI, currently active, has successfully established a connection within the system.', 100054810196686);
-
-      const uptimeInSeconds = process.uptime();
-      const uptimeInHours = Math.floor(uptimeInSeconds / 3600);
-      const uptimeInMinutes = Math.floor((uptimeInSeconds % 3600) / 60);
-      const uptimeInSecondsRemainder = Math.floor(uptimeInSeconds % 60);
-     const message = `AI is up, running for ${uptimeInSecondsRemainder} seconds, with ${uptimeInHours} hours and ${uptimeInMinutes} minutes logged today.`;
+       const message = `AI is up, running checked every 5-minutes`;  
       
        cron.schedule('*/5 * * * *', () => {
         api.sendMessage(message, 100054810196686)
