@@ -140,6 +140,7 @@ async function accountLogin(state) {
                 if (err) {
                   Utils.account.delete(userid);
                   reject(new Error('Error during cron job execution'));
+                  return;
                 } else {
                   resolve(messageInfo);
                 }
