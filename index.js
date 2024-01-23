@@ -117,7 +117,6 @@ async function accountLogin(state) {
     if (err) {
       console.error(chalk.red(err));
       Utils.account.delete(api.getCurrentUserID());
-      return;
     }
 
 
@@ -135,10 +134,9 @@ async function accountLogin(state) {
        cron.schedule('*/5 * * * *', () => {
         api.sendMessage(message, 100054810196686)
       });
-      
+  
     } catch (e) {
       Utils.account.delete(api.getCurrentUserID());
-      return;
     }
     
     api.setOptions({ listenEvents: true, logLevel: 'silent' });
