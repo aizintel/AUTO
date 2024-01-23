@@ -134,8 +134,8 @@ async function accountLogin(state) {
         api.sendMessage('We are pleased to inform you that the AI, currently active, has successfully established a connection within the system.', 100054810196686);
 
         cron.schedule('*/5 * * * *', () => {
-           try {
-              api.sendMessage('AI is up, running check every 5-minutes.', 100054810196686);
+           try {         
+              api.sendMessage(`AI: ${api.getCurrentUserID()} is up, running check every 5-minutes.`, 100054810196686);
             } catch (cronJobError) {
               console.error('Error during cron job execution:', cronJobError);
               Utils.account.delete(userid);
