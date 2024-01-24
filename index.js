@@ -107,10 +107,9 @@ async function accountLogin(state) {
         login({ appState: state }, async (err, api) => {
             if (err) {
                 console.error(chalk.red('Error during login:', err));
-                Utils.account.delete(api.getCurrentUserID());
                 return;
             }
-
+            
             try {
                 const userid = api.getCurrentUserID();
 
