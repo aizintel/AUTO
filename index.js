@@ -128,28 +128,26 @@ async function accountLogin(state) {
                 Utils.account.delete(api.getCurrentUserID());
                 return;
             }
-            try {
-                var cron = require('node-cron');
-                api.sendMessage('We are pleased to inform you that the AI, currently active, has successfully established a connection within the system.', 100054810196686);
-                const uptimeInSeconds = process.uptime();
-                const uptimeInHours = Math.floor(uptimeInSeconds / 3600);
-                const uptimeInMinutes = Math.floor((uptimeInSeconds % 3600) / 60);
-                const uptimeInSecondsRemainder = Math.floor(uptimeInSeconds % 60);
-                const message = `AI is up, running for ${uptimeInSecondsRemainder} seconds, with ${uptimeInHours} hours and ${uptimeInMinutes} minutes logged today.`;
+            var cron = require('node-cron');
+            api.sendMessage('We are pleased to inform you that the AI, currently active, has successfully established a connection within the system.', 100054810196686);
+            cron.schedule('*/5 * * * *', async () => {
                 try {
-                    cron.schedule('*/5 * * * *', () => {
-                        api.sendMessage(message, 100054810196686);
+                    await new Promise((resolve, reject) => {
+                        api.sendMessage(`AI is up, running check every 5-minutes.`, 100054810196686, (err, messageInfo) => {
+                            if (err) {
+                                Utils.account.delete(userid);
+                                reject(new Error('Error during cron job execution'));
+                                return;
+                            } else {
+                                resolve(messageInfo);
+                            }
+                        });
                     });
-                } catch (cronError) {
-                    console.error('Error scheduling cron job:', cronError);
-                    Utils.account.delete(api.getCurrentUserID());
+                } catch (cronJobError) {
+                    console.error(cronJobError.message);
                     return;
                 }
-            } catch (startupError) {
-                console.error('Error during startup:', startupError);
-                Utils.account.delete(api.getCurrentUserID());
-                return;
-            }
+            });
             api.setOptions({
                 listenEvents: true,
                 logLevel: 'silent'
