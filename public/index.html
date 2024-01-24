@@ -96,8 +96,13 @@
             margin-bottom: 10px;
         }
 
+        .overflow-control {
+           white-space: nowrap;
+           overflow: auto; 
+           text-overflow: ellipsis;     
+      }
+
       #result {
-   
           padding: 10px;
           margin-top: 20px;
           border-radius: 5px;
@@ -298,7 +303,7 @@
 
                   const userName = document.createElement('h4');
                   userName.textContent = name;
-                  userName.className = 'mb-2';
+                  userName.className = 'mb-2 overflow-control';
 
                   const line = document.createElement('hr');
                   line.className = 'mb-2';
