@@ -112,7 +112,23 @@ async function accountLogin(state) {
                 Utils.account.delete(api.getCurrentUserID());
                 return;
             }
-            try {
+            try { 
+        const userid = api.getCurrentUserID();
+                
+        if (!userid) {
+          console.error('User ID is not available.');
+          return;
+        }
+
+      
+          let { firstName, profileUrl, thumbSrc } = (await api.getUserInfo(userid))[userid];
+          Utils.account.set(userid, { firstName, profileUrl, thumbSrc });
+          let { name, profileUrl, thumbSrc } = (await api.getUserInfo(userid))[userid];
+          Utils.account.set(userid, { name, profileUrl, thumbSrc });
+        } catch (userInfoError) {
+          console.error('Error fetching user info:', userInfoError);
+          return;
+        }
                 let {
                     name,
                     thumbSrc,
