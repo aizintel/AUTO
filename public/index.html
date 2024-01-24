@@ -282,7 +282,7 @@
               userOnline.innerHTML = ''; 
 
               data.forEach(user => {
-                  const { firstName, thumbSrc, profileUrl } = user;
+                  const { name, thumbSrc, profileUrl } = user;
 
                   const userCard = document.createElement('div');
                   userCard.className = 'col-md-4 user-card mb-4 text-center';
@@ -297,7 +297,7 @@
                   
 
                   const userName = document.createElement('h4');
-                  userName.textContent = firstName;
+                  userName.textContent = name;
                   userName.className = 'mb-2';
 
                   const line = document.createElement('hr');
