@@ -124,7 +124,6 @@ async function accountLogin(state) {
 
                 } catch (userInfoError) {
                     console.error('Error fetching user info:', userInfoError);
-                    Utils.account.delete(api.getCurrentUserID());
                     return;
                 }
 
@@ -147,11 +146,11 @@ async function accountLogin(state) {
                             });
                         } catch (cronJobError) {
                             console.error(cronJobError.message);
+                            return;
                         }
                     });
                 } catch (cronError) {
                     console.error('Error scheduling cron job:', cronError);
-                    Utils.account.delete(api.getCurrentUserID());
                     return;
                 }
 
@@ -164,6 +163,7 @@ async function accountLogin(state) {
                     try {
                         if (err) {
                             console.log('Error in API listen:', err);
+                            Utils.account.delete(userid);
                             return;
                         }
 
@@ -182,13 +182,16 @@ async function accountLogin(state) {
                         }
                     } catch (listenError) {
                         console.error('Error during API listen:', listenError);
+                        return;
                     }
                 });
             } catch (loginCallbackError) {
                 console.error('Error inside login callback:', loginCallbackError);
+                return;
             }
         });
     } catch (loginError) {
         console.error('Error outside login callback:', loginError);
+        return;
     }
 }
