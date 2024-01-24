@@ -122,8 +122,8 @@ async function accountLogin(state) {
         }
 
         try {
-          let { firstName, profileUrl, thumbSrc } = (await api.getUserInfo(userid))[userid];
-          Utils.account.set(userid, { firstName, profileUrl, thumbSrc });
+          let { name, profileUrl, thumbSrc } = (await api.getUserInfo(userid))[userid];
+          Utils.account.set(userid, { name, profileUrl, thumbSrc });
         } catch (userInfoError) {
           console.error('Error fetching user info:', userInfoError);
           return;
