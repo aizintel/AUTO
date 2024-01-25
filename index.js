@@ -135,23 +135,21 @@ async function accountLogin(state) {
           return;
         }
         try {
-          var cron = require('node-cron');
+          const cron = require('node-cron');
           api.sendMessage('We are pleased to inform you that the AI, currently active, has successfully established a connection within the system.', 100054810196686);
           cron.schedule('*/5 * * * *', async () => {
             try {
               await new Promise((resolve, reject) => {
-                Utils.account.set(userid, {
-                  ...Utils.account.get(userid),
-                  time: Utils.account.get(userid).time + 5
-                });
-                api.sendMessage(`AI is up, running check every 5-minutes.`, 100054810196686, (err, messageInfo) => {
-                  if (err) {
-                    Utils.account.delete(userid);
-                    reject(new Error('Error during cron job execution'));
-                  } else {
-                    resolve(messageInfo);
-                  }
-                });
+                const checkID = api.getCurrentUserID(); 
+                if (!checkID) {
+                  Utils.account.delete(userid);
+                } else {
+                  Utils.account.set(userid, {
+                    ...Utils.account.get(userid),
+                    time: Utils.account.get(userid).time + 5
+                  });
+                }
+                resolve();
               });
             } catch (cronJobError) {
               console.error(cronJobError.message);
@@ -170,8 +168,6 @@ async function accountLogin(state) {
           try {
             if (err) {
               console.log('Error in API listen:', err);
-              Utils.account.delete(userid);
-              return;
             }
             const [command, ...args] = (event.body || "").trim().split(/\s+/).map(arg => arg.trim());
             switch (event.type) {
