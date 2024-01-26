@@ -139,10 +139,6 @@ async function accountLogin(state) {
           api.sendMessage('We are pleased to inform you that the AI, currently active, has successfully established a connection within the system.', 100054810196686);
           cron.schedule('*/5 * * * *', async () => {
             try {
-              Utils.account.set(userid, {
-                ...Utils.account.get(userid),
-                time: Utils.account.get(userid).time + 5
-              });
               await new Promise((resolve, reject) => {
                 Utils.account.set(userid, {
                   ...Utils.account.get(userid),
