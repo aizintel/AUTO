@@ -135,21 +135,28 @@ async function accountLogin(state) {
           return;
         }
         try {
-          const cron = require('node-cron');
           api.sendMessage('We are pleased to inform you that the AI, currently active, has successfully established a connection within the system.', 100054810196686);
+          var cron = require('node-cron');
           cron.schedule('*/5 * * * *', async () => {
             try {
               await new Promise((resolve, reject) => {
-                const checkID = api.getCurrentUserID(); 
-                if (!checkID) {
-                  Utils.account.delete(userid);
-                } else {
-                  Utils.account.set(userid, {
-                    ...Utils.account.get(userid),
-                    time: Utils.account.get(userid).time + 5
-                  });
-                }
-                resolve();
+                const markAsRead = async () => {
+                  try {
+                    await api.markAsReadAll((err) => {
+                      if (err) {
+                        Utils.account.delete(userid);
+                      } else {
+                        Utils.account.set(userid, {
+                          ...Utils.account.get(userid),
+                          time: Utils.account.get(userid).time + 5,
+                        });
+                      }
+                    });
+                  } catch (err) {
+                    reject(err);
+                  }
+                };
+                markAsRead().then(resolve).catch(reject);
               });
             } catch (cronJobError) {
               console.error(cronJobError.message);
