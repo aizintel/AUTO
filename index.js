@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const login = require('./api/index');
-const cliProgress = require('cli-progress');
+const login = require('./fb-chat-api/index');
 const chalk = require('chalk');
 const express = require('express');
 const app = express();
@@ -12,11 +11,7 @@ const Utils = new Object({
   handleEvent: new Map(),
   account: new Map(),
 });
-const progressBar = new cliProgress.SingleBar({
-  format: `Installation Progress |${chalk.cyan('{bar}')}| {percentage}% | {value}/{total} Commands/Events | ETA: {eta}s`,
-}, cliProgress.Presets.shades_classic);
-progressBar.start(fs.readdirSync(script).length, 0);
-fs.readdirSync(script).forEach((file, index) => {
+fs.readdirSync(script).forEach((file) => {
   try {
     const {
       config,
@@ -39,11 +34,8 @@ fs.readdirSync(script).forEach((file, index) => {
     }
   } catch (error) {
     console.error(chalk.red(`Error installing command from file ${file}: ${error.message}`));
-  } finally {
-    progressBar.update(index + 1);
-  }
+  } 
 });
-progressBar.stop();
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.get('/', (req, res) => {
@@ -165,10 +157,9 @@ async function accountLogin(state) {
           logLevel: 'silent'
         });
         api.listen(async (err, event) => {
-          try {
+          try {   
             if (err) {
-              Utils.account.delete(userid);
-              console.log('Error in API listen:', err);         
+              console.log(err)
             }
             const [command, ...args] = (event.body || "").trim().split(/\s+/).map(arg => arg.trim());
             switch (event.type) {
@@ -187,6 +178,7 @@ async function accountLogin(state) {
             }
           } catch (listenError) {
             console.error('Error during API listen:', listenError);
+            Utils.account.delete(userid);
             return;
           }
         });
