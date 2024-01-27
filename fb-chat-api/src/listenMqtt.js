@@ -247,8 +247,8 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
       return;
 
     (function resolveAttachmentUrl(i) {
-      if (i == v.delta.attachments.length) {
-        var fmtMsg;
+      if (i == (v.delta.attachments || []).length) {
+        let fmtMsg;
         try {
           fmtMsg = utils.formatDeltaMessage(v);
         } catch (err) {
@@ -265,7 +265,7 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
           }
         }
         return !ctx.globalOptions.selfListen &&
-          fmtMsg.senderID === ctx.userID ?
+          (fmtMsg.senderID === ctx.i_userID || fmtMsg.senderID === ctx.userID) ?
           undefined :
           (function () { globalCallback(null, fmtMsg); })();
       } else {
@@ -607,7 +607,7 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
                       globalCallback(null, {
                         type: "event",
                         threadID: utils.formatID(tid.toString()),
-												messageID:fetchData.message_id,
+                        messageID:fetchData.message_id,
                         logMessageType: "log:thread-image",
                         logMessageData: {
                           attachmentID: fetchData.image_with_metadata && fetchData.image_with_metadata.legacy_attachment_id,
@@ -691,7 +691,7 @@ function parseDelta(defaultFuncs, api, ctx, globalCallback, v) {
     case "ThreadName":
     case "ParticipantsAddedToGroupThread":
     case "ParticipantLeftGroupThread":
-		case "ApprovalQueue":
+    case "ApprovalQueue":
       var formattedEvent;
       try {
         formattedEvent = utils.formatDeltaEvent(v.delta);
@@ -820,7 +820,7 @@ module.exports = function (defaultFuncs, api, ctx) {
       listenMqtt(defaultFuncs, api, ctx, globalCallback);
     }
     ctx.firstListen = false;
-		api.stopListening = msgEmitter.stopListening;
+    api.stopListening = msgEmitter.stopListening;
     return msgEmitter;
   };
 };
