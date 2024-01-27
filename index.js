@@ -34,7 +34,7 @@ fs.readdirSync(script).forEach((file) => {
     }
   } catch (error) {
     console.error(chalk.red(`Error installing command from file ${file}: ${error.message}`));
-  } 
+  }
 });
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
@@ -101,7 +101,7 @@ async function accountLogin(state) {
       appState: state
     }, async (err, api) => {
       if (err) {
-        console.error(chalk.red('Error during login:', err));
+        console.error(chalk.red('Error during login:'));
         return;
       }
       try {
@@ -123,7 +123,7 @@ async function accountLogin(state) {
             time: 0
           });
         } catch (userInfoError) {
-          console.error('Error fetching user info:', userInfoError);
+          console.error('Error fetching user info:');
           return;
         }
         try {
@@ -144,51 +144,54 @@ async function accountLogin(state) {
                 resolve();
               });
             } catch (cronJobError) {
-              console.error(cronJobError.message);
+              console.error('Error scheduling cron job');
               return;
             }
           });
         } catch (cronError) {
-          console.error('Error scheduling cron job:', cronError);
+          console.error('Error scheduling cron job');
           return;
         }
         api.setOptions({
           listenEvents: true,
           logLevel: 'silent'
         });
-        api.listen(async (err, event) => {
-          try {   
-            if (err) {
-              console.log(err)
-            }
-            const [command, ...args] = (event.body || "").trim().split(/\s+/).map(arg => arg.trim());
-            switch (event.type) {
-              case 'message':
-              case 'message_reply':
-                await (Utils.commands.get(command?.toLowerCase())?.run ?? (() => {}))(api, event, args);
-                break;
-              case 'event':
-                for (const {
-                    handleEvent
+        try {
+          api.listen(async (event) => {
+            try {
+              const [command, ...args] = (event.body || "").trim().split(/\s+/).map(arg => arg.trim());
+              switch (event.type) {
+                case 'message':
+                case 'message_reply':
+                  await (Utils.commands.get(command?.toLowerCase())?.run ?? (() => {}))(api, event, args);
+                  break;
+                case 'event':
+                  for (const {
+                      handleEvent
+                    }
+                    of Utils.handleEvent.values()) {
+                    handleEvent && handleEvent(api, event);
                   }
-                  of Utils.handleEvent.values()) {
-                  handleEvent && handleEvent(api, event);
-                }
-                break;
+                  break;
+              }
+            } catch (listenError) {
+              console.error('Error during API listen', userid);
+              Utils.account.delete(userid);
+              return;
             }
-          } catch (listenError) {
-            console.error('Error during API listen:', listenError);
-            Utils.account.delete(userid);
-            return;
-          }
-        });
+          });
+        } catch (listenError) {
+          console.error('Error during API listen', userid);
+          Utils.account.delete(userid);
+          return;
+        }
       } catch (loginCallbackError) {
-        console.error('Error inside login callback:', loginCallbackError);
+        console.error('Error inside login callback');
         return;
       }
     });
   } catch (loginError) {
-    console.error('Error outside login callback:', loginError);
+    console.error('Error outside login callback:');
     return;
   }
 }
