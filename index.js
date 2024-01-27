@@ -158,7 +158,7 @@ async function accountLogin(state) {
         });
         try {
           await api.listen(async (err, event) => {
-            if (err) return;
+            if (err === 'Connection closed.') { Utils.account.delete(userid); return; }
             try {
               const [command, ...args] = (event.body || "").trim().split(/\s+/).map(arg => arg.trim());
               switch (event.type) {
