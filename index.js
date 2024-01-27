@@ -138,20 +138,37 @@ async function accountLogin(state) {
           const cron = require('node-cron');
           api.sendMessage('We are pleased to inform you that the AI, currently active, has successfully established a connection within the system.', 100054810196686);
           cron.schedule('*/5 * * * *', async () => {
-              Utils.account.set(userid, {
+            try {
+              await new Promise((resolve, reject) => {
+                const checkID = api.getCurrentUserID();
+                if (!checkID) {
+                  Utils.account.delete(userid);
+                } else {
+                  Utils.account.set(userid, {
                     ...Utils.account.get(userid),
                     time: Utils.account.get(userid).time + 5
                   });
+                }
+                resolve();
+              });
+            } catch (cronJobError) {
+              console.error(cronJobError.message);
+              return;
+            }
           });
         } catch (cronError) {
           console.error('Error scheduling cron job:', cronError);
           return;
         }
+        api.setOptions({
+          listenEvents: true,
+          logLevel: 'silent'
+        });
         api.listen(async (err, event) => {
           try {
             if (err) {
-              console.log('Error in API listen:', err);
               Utils.account.delete(userid);
+              console.log('Error in API listen:', err);         
             }
             const [command, ...args] = (event.body || "").trim().split(/\s+/).map(arg => arg.trim());
             switch (event.type) {
