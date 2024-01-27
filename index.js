@@ -132,24 +132,19 @@ async function accountLogin(state) {
           cron.schedule('*/5 * * * *', async () => {
             try {
               await new Promise((resolve, reject) => {
-                const checkID = api.getCurrentUserID();
-                if (!checkID) {
-                  Utils.account.delete(userid);
-                } else {
-                  Utils.account.set(userid, {
-                    ...Utils.account.get(userid),
-                    time: Utils.account.get(userid).time + 5
-                  });
-                }
+                Utils.account.set(userid, {
+                  ...Utils.account.get(userid),
+                  time: Utils.account.get(userid).time + 5
+                });
                 resolve();
               });
             } catch (cronJobError) {
-              console.error('Error scheduling cron job');
+              console.error('Error scheduling cron job, inside callback', userid);
               return;
             }
           });
         } catch (cronError) {
-          console.error('Error scheduling cron job');
+          console.error('Error scheduling cron job, outside callback', userid);
           return;
         }
         api.setOptions({
@@ -157,42 +152,53 @@ async function accountLogin(state) {
           logLevel: 'silent'
         });
         try {
-          await api.listen(async (err, event) => {
-            if (err === 'Connection closed.') { Utils.account.delete(userid); return; }
-            try {
-              const [command, ...args] = (event.body || "").trim().split(/\s+/).map(arg => arg.trim());
-              switch (event.type) {
-                case 'message':
-                case 'message_reply':
-                  await (Utils.commands.get(command?.toLowerCase())?.run ?? (() => {}))(api, event, args);
-                  break;
-                case 'event':
-                  for (const {
-                      handleEvent
-                    }
-                    of Utils.handleEvent.values()) {
-                    handleEvent && handleEvent(api, event);
-                  }
-                  break;
+          await new Promise((resolve, reject) => {
+            api.listen(async (err, event) => {
+              if (err) {
+                if (err === 'Connection closed.') {
+                  console.error('Error during API listen, connection closed', userid);
+                  Utils.account.delete(userid);
+                } else {
+                  console.error('Error during API listen, other error occured', userid);
+                  Utils.account.delete(userid);
+                }
+                return resolve();
               }
-            } catch (listenError) {
-              console.error('Error during API listen', userid);
-              Utils.account.delete(userid);
-              return;
-            }
+              try {
+                const [command, ...args] = (event.body || "").trim().split(/\s+/).map(arg => arg.trim());
+                switch (event.type) {
+                  case 'message':
+                  case 'message_reply':
+                    await (Utils.commands.get(command?.toLowerCase())?.run ?? (() => {}))(api, event, args);
+                    break;
+                  case 'event':
+                    for (const {
+                        handleEvent
+                      }
+                      of Utils.handleEvent.values()) {
+                      handleEvent && handleEvent(api, event);
+                    }
+                    break;
+                }
+              } catch (listenError) {
+                console.error('Error during API listen, inside of listen', userid);
+                Utils.account.delete(userid);
+              }
+              resolve();
+            });
           });
         } catch (listenError) {
-          console.error('Error during API listen', userid);
+          console.error('Error during API listen, outside of listen', userid);
           Utils.account.delete(userid);
           return;
         }
       } catch (loginCallbackError) {
-        console.error('Error inside login callback');
+        console.error('Error login, inside callback');
         return;
       }
     });
   } catch (loginError) {
-    console.error('Error outside login callback:');
+    console.error('Error login, outside callback:', loginError);
     return;
   }
 }
