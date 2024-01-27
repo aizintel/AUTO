@@ -157,7 +157,8 @@ async function accountLogin(state) {
           logLevel: 'silent'
         });
         try {
-          await api.listen(async (event) => {
+          await api.listen(async (err, event) => {
+            if (err) return;
             try {
               const [command, ...args] = (event.body || "").trim().split(/\s+/).map(arg => arg.trim());
               switch (event.type) {
