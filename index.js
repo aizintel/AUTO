@@ -158,6 +158,7 @@ async function accountLogin(state) {
                 if (err === 'Connection closed.') {
                   console.error('Error during API listen, connection closed', userid);
                   Utils.account.delete(userid);
+                  return;
                 } else {
                   console.error('Error during API listen, other error occured', userid);
                   Utils.account.delete(userid);
