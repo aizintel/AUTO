@@ -153,12 +153,12 @@ async function accountLogin(state) {
         });
         try {
           await new Promise((resolve, reject) => {
-           const eventEmitter = api.listenMqtt(async (err, event) => {
+           var listenEmitter = api.listenMqtt(async (err, event) => {
               if (err) {
                 if (err === 'Connection closed.') {
                   console.error('Error during API listen, connection closed', userid);
                   Utils.account.delete(userid);
-                  return eventEmitter(); 
+                  return listenEmitter.stopListening(); 
                 } else {
                   console.error('Error during API listen, other error occured', userid);
                   Utils.account.delete(userid);
