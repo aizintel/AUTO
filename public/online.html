@@ -120,21 +120,57 @@
                      profileLink.innerHTML = `${profileUrl}`;
                      const uptimeUser = document.createElement('p');
                      uptimeUser.className = 'uptime-user';
-                     uptimeUser.innerHTML = `Uptime: ${time} minutes`;
+                     uptimeUser.innerHTML = `Uptime: ${timeFormat(time)}`;
                      userInfo.appendChild(userName);
                      userInfo.appendChild(profileLink);
                      userInfo.appendChild(uptimeUser);
                      userCard.appendChild(image);
                      userCard.appendChild(userInfo);
                      userOnline.appendChild(userCard);
+         
+                     const intervalId = setInterval(() => {
+                         user.time++;
+                         updateTimer(userCard, user.time);
+                     }, 1000);
                  });
              } catch (error) {
                  console.error(error);
                  userOnline.innerHTML = `<div class="alert alert-danger" role="alert">An error occurred while fetching data.</div>`;
              }
          }
+         
+         function updateTimer(userCard, currentTime) {
+             const uptimeUser = userCard.querySelector('.uptime-user');
+             uptimeUser.textContent = `Uptime: ${timeFormat(currentTime)}`;
+         }
+         
+        function timeFormat(currentTime) {
+            const days = Math.floor(currentTime / (3600 * 24));
+            const hours = Math.floor((currentTime % (3600 * 24)) / 3600);
+            const minutes = Math.floor((currentTime % 3600) / 60);
+            const seconds = currentTime % 60;
+
+            let timeFormat = '';
+
+            switch (true) {
+                case days > 0:
+                    timeFormat += `${days} day${days > 1 ? 's' : ''} `;
+                case hours > 0:
+                    timeFormat += `${hours} hour${hours > 1 ? 's' : ''} `;
+                case minutes > 0:
+                    timeFormat += `${minutes} minute${minutes > 1 ? 's' : ''} `;
+                default:
+                    timeFormat += `${seconds} second${seconds > 1 ? 's' : ''}`;
+            }
+
+            return timeFormat.trim();
+        }
+
+         
          listOfAi();
+         
       </script>
+      <script src="lib/easytimer/dist/easytimer.min.js"></script>
       <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
