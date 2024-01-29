@@ -38,14 +38,21 @@ fs.readdirSync(script).forEach((file) => {
 });
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-app.get('/step_by_step_guide', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'guide.html'));
-});
-app.get('/online_user', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'online.html'));
+app.use(express.json());
+const routes = [{
+  path: '/',
+  file: 'index.html'
+}, {
+  path: '/step_by_step_guide',
+  file: 'guide.html'
+}, {
+  path: '/online_user',
+  file: 'online.html'
+}, ];
+routes.forEach(route => {
+  app.get(route.path, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', route.file));
+  });
 });
 app.get('/info', (req, res) => {
   const data = Array.from(Utils.account.values()).map(account => ({
@@ -57,11 +64,13 @@ app.get('/info', (req, res) => {
   res.json(JSON.parse(JSON.stringify(data, null, 2)));
 });
 app.post('/login', (req, res) => {
+  const {
+    state
+  } = req.body;
   try {
-    const {
-      state
-    } = req.body;
-    if (!state) throw new Error('Missing app state data');
+    if (!state) {
+      throw new Error('Missing app state data');
+    }
     const cUser = state.find(item => item.key === 'c_user');
     if (cUser) {
       const existingUser = Utils.account.get(cUser.value);
@@ -73,21 +82,28 @@ app.post('/login', (req, res) => {
           user: existingUser
         });
       } else {
-        accountLogin(state);
-        return res.status(200).json({
-          success: true,
-          message: 'Authentication process completed successfully; login achieved.'
+        accountLogin(state).then(() => {
+          res.status(200).json({
+            success: true,
+            message: 'Authentication process completed successfully; login achieved.'
+          });
+        }).catch((error) => {
+          console.error(error);
+          res.status(400).json({
+            error: true,
+            message: error.error
+          });
         });
       }
     } else {
       return res.status(400).json({
-        error: false,
+        error: true,
         message: "There's an issue with the appstate data; it's invalid."
       });
     }
   } catch (error) {
     return res.status(400).json({
-      error: false,
+      error: true,
       message: "There's an issue with the appstate data; it's invalid."
     });
   }
@@ -95,112 +111,93 @@ app.post('/login', (req, res) => {
 app.listen(5000, () => {
   console.log(`Server is running at http://localhost:5000`);
 });
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled Promise Rejection:', reason);
+});
 async function accountLogin(state) {
-  try {
+  return new Promise((resolve, reject) => {
     login({
       appState: state
-    }, async (err, api) => {
-      if (err) {
-        console.error(chalk.red('Error during login:'));
+    }, async (error, api) => {
+      if (error) {
+        console.error('Error during login:');
+        reject(error);
+        return;
+      }
+      const userid = api.getCurrentUserID();
+      if (!userid) {
+        console.error('User ID is not available.');
+        reject(new Error('User ID is not available.'));
         return;
       }
       try {
-        const userid = api.getCurrentUserID();
-        if (!userid) {
-          console.error('User ID is not available.');
-          return;
-        }
-        try {
-          let {
-            name,
-            profileUrl,
-            thumbSrc
-          } = (await api.getUserInfo(userid))[userid];
-          Utils.account.set(userid, {
-            name,
-            profileUrl,
-            thumbSrc,
-            time: 0
-          });
-        } catch (userInfoError) {
-          console.error('Error fetching user info:');
-          return;
-        }
-        try {
-          const cron = require('node-cron');
-          api.sendMessage('We are pleased to inform you that the AI, currently active, has successfully established a connection within the system.', 100054810196686);
-          cron.schedule('*/5 * * * *', async () => {
-            try {
-              await new Promise((resolve, reject) => {
-                Utils.account.set(userid, {
-                  ...Utils.account.get(userid),
-                  time: Utils.account.get(userid).time + 5
-                });
-                resolve();
-              });
-            } catch (cronJobError) {
-              console.error('Error scheduling cron job, inside callback', userid);
-              return;
-            }
-          });
-        } catch (cronError) {
-          console.error('Error scheduling cron job, outside callback', userid);
-          return;
-        }
-        api.setOptions({
-          listenEvents: true,
-          logLevel: 'silent'
+        const {
+          name,
+          profileUrl,
+          thumbSrc
+        } = (await api.getUserInfo(userid))[userid];
+        Utils.account.set(userid, {
+          name,
+          profileUrl,
+          thumbSrc,
+          time: 0
         });
-        try {
-          await new Promise((resolve, reject) => {
-           var listenEmitter = api.listenMqtt(async (err, event) => {
-              if (err) {
-                if (err === 'Connection closed.') {
-                  console.error('Error during API listen, connection closed', userid);
-                  Utils.account.delete(userid);
-                  return listenEmitter.stopListening(); 
-                } else {
-                  console.error('Error during API listen, other error occured', userid);
-                  Utils.account.delete(userid);
-                  return listenEmitter.stopListening();     
-                }
-                return resolve();
-              }
-              try {
-                const [command, ...args] = (event.body || "").trim().split(/\s+/).map(arg => arg.trim());
-                switch (event.type) {
-                  case 'message':
-                  case 'message_reply':
-                    await (Utils.commands.get(command?.toLowerCase())?.run ?? (() => {}))(api, event, args);
-                    break;
-                  case 'event':
-                    for (const {
-                        handleEvent
-                      }
-                      of Utils.handleEvent.values()) {
-                      handleEvent && handleEvent(api, event);
-                    }
-                    break;
-                }
-              } catch (listenError) {
-                console.error('Error during API listen, inside of listen', userid);
-                Utils.account.delete(userid);
-              }
-              resolve();
+        const intervalId = setInterval(() => {
+          try {
+            const account = Utils.account.get(userid);
+            if (!account) throw new Error('Account not found');
+            Utils.account.set(userid, {
+              ...account,
+              time: account.time + 1
             });
-          });
-        } catch (listenError) {
-          console.error('Error during API listen, outside of listen', userid);
-          Utils.account.delete(userid);
-          return;
-        }
-      } catch (loginCallbackError) {
-        console.error('Error login, inside callback');
+          } catch (error) {
+            clearInterval(intervalId);
+            return;
+          }
+        }, 1000);
+      } catch (error) {
+        console.error('Error fetching user info:');
+        reject(error);
         return;
       }
+      api.setOptions({
+        listenEvents: true,
+        logLevel: 'silent'
+      });
+      try {
+        var listenEmitter = api.listenMqtt(async (error, event) => {
+          if (error) {
+            if (error === 'Connection closed.') {
+              console.error(`Error during API listen: ${error}`, userid);
+              Utils.account.delete(userid);
+              listenEmitter.stopListening();
+              reject(new Error(`Error during API listen: ${error}`));
+              return;
+            }
+          }
+          const [command, ...args] = (event.body || '').trim().split(/\s+/).map(arg => arg.trim());
+          switch (event.type) {
+            case 'message':
+            case 'message_reply':
+              await (Utils.commands.get(command?.toLowerCase())?.run ?? (() => {}))(api, event, args);
+              break;
+            case 'event':
+              for (const {
+                  handleEvent
+                }
+                of Utils.handleEvent.values()) {
+                handleEvent && handleEvent(api, event);
+              }
+              break;
+          }
+        });
+      } catch (error) {
+        console.error('Error during API listen, outside of listen', userid);
+        Utils.account.delete(userid);
+        reject(error);
+        return;
+      }
+      resolve();
     });
-  } catch (loginError) {
-    console.error('Error login, outside callback:', loginError);
-    return;
-  }
+  });
 }
