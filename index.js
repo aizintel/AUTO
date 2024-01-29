@@ -91,7 +91,7 @@ app.post('/login', (req, res) => {
           console.error(error);
           res.status(400).json({
             error: true,
-            message: error
+            message: error.message
           });
         });
       }
@@ -132,7 +132,7 @@ async function accountLogin(state) {
       }
       try {
         const userInfo = await api.getUserInfo(userid);
-        if (!userInfo || !userInfo[userid]?.name || !userInfo[userid]?.profileUrl || !userInfo[userid]?.thumbSrc) return;
+        if (!userInfo || !userInfo[userid]?.name || !userInfo[userid]?.profileUrl || !userInfo[userid]?.thumbSrc) throw new Error('Unable to locate the account; it appears to be in a suspended or locked state.');
         const {
           name,
           profileUrl,
