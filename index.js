@@ -124,7 +124,7 @@ async function accountLogin(state) {
         reject(error);
         return;
       }
-      const userid = await api.getCurrentUserID();  
+        const userid = await api.getCurrentUserID();  
       try {
         const userInfo = await api.getUserInfo(userid);
         if (!userInfo || !userInfo[userid]?.name || !userInfo[userid]?.profileUrl || !userInfo[userid]?.thumbSrc) throw new Error('Unable to locate the account; it appears to be in a suspended or locked state.');
