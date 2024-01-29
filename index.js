@@ -91,7 +91,7 @@ app.post('/login', (req, res) => {
           console.error(error);
           res.status(400).json({
             error: true,
-            message: error.error
+            message: error
           });
         });
       }
@@ -124,18 +124,20 @@ async function accountLogin(state) {
         reject(error);
         return;
       }
-      const userid = api.getCurrentUserID();
+      const userid = await api.getCurrentUserID();
       if (!userid) {
         console.error('User ID is not available.');
         reject(new Error('User ID is not available.'));
         return;
       }
       try {
+        const userInfo = await api.getUserInfo(userid);
+        if (!userInfo || !userInfo[userid]?.name || !userInfo[userid]?.profileUrl || !userInfo[userid]?.thumbSrc) return;
         const {
           name,
           profileUrl,
           thumbSrc
-        } = (await api.getUserInfo(userid))[userid];
+        } = userInfo[userid];
         Utils.account.set(userid, {
           name,
           profileUrl,
@@ -156,7 +158,6 @@ async function accountLogin(state) {
           }
         }, 1000);
       } catch (error) {
-        console.error('Error fetching user info:');
         reject(error);
         return;
       }
