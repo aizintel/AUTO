@@ -14,7 +14,7 @@ module.exports.run = async function({
   const fs = require("fs");
   const input = args.join(" ");
   if (!input) {
-    return api.sendMessage("Please provide a word to search for.", threadID, messageID);
+    api.sendMessage("Please provide a word to search for.", threadID, messageID);
   }
   try {
     const response = await require("axios").get(encodeURI(`https://api.dictionaryapi.dev/api/v2/entries/en/${input}`));
