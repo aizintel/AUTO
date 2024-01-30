@@ -21,9 +21,9 @@ module.exports.run = async function({
     if (args.length == 0) {
       return api.sendMessage("Usage: teach [ask] | [answer]", tid, mid);
     } else if (args.join(" ").includes("|")) {
-      api.sendMessage("Please provide both a question and an answer.", tid, mid);
+      return api.sendMessage("Please provide both a question and an answer.", tid, mid);
     } else {
-      api.sendMessage("Please use '|' character to separate the question and answer.", tid, mid);
+      return api.sendMessage("Please use '|' character to separate the question and answer.", tid, mid);
     }
   }
   const ask = encodeURIComponent(input[0].trim());
