@@ -5,9 +5,8 @@ module.exports.config = {
   version: '1.0.0',
 };
 
-module.exports.run = async function (api, event, args) {
+module.exports.run = async function ({api, event, args }) {
   const input = args.join(' ');
-
   if (!input) {
     api.sendMessage(
       `Please provide a question or statement after 'ai'. For example: 'ai What is the capital of France?'`,
@@ -25,7 +24,7 @@ module.exports.run = async function (api, event, args) {
 
     api.sendMessage(response, event.threadID, event.messageID);
   } catch (error) {
-    console.error('Error making API request:', error.message);
     api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
   }
 };
+
