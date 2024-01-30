@@ -14,7 +14,6 @@ module.exports.run = async function({
   const musicName = args.join(' ');
   if (!musicName) {
     api.sendMessage(`To get started, type music and the title of the song you want.`, event.threadID, event.messageID);
-    return;
   }
   try {
     const searchResults = await yts(musicName);
