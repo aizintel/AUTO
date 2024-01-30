@@ -14,6 +14,7 @@ module.exports.run = async function({
     if (!input) {
       const message = `Here's the list of anime categories:\n\nCategory: nsfw\nType:\n• waifu\n• neko\n• trap\n• blowjob\n\nCategory: sfw\nType:\n• waifu\n• neko\n• shinobu\n• megumin\n• bully\n• cuddle\n• cry\n• hug\n• awoo\n• kiss\n• lick\n• pat\n• smug\n• bonk\n• yeet\n• blush\n• smile\n• wave\n• highfive\n• handhold\n• nom\n• bite\n• glomp\n• slap\n• kill\n• kick\n• happy\n• wink\n• poke\n• dance\n• cringe\n\nUsage: anime category - type`;
       api.sendMessage(message, event.threadID, event.messageID);
+      return;
     } else {
       const split = input.split('-').map(item => item.trim());
       const choice = split[0];
