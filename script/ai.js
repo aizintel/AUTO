@@ -14,6 +14,7 @@ module.exports.run = async function (api, event, args) {
       event.threadID,
       event.messageID
     );
+    return;
   }
 
   api.sendMessage(`🔍 "${input}"`, event.threadID, event.messageID);
