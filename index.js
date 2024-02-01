@@ -91,7 +91,6 @@ app.post('/login', async (req, res) => {
     state,
     commands
   } = req.body;
-  console.log(commands)
   try {
     if (!state) {
       throw new Error('Missing app state data');
