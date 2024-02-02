@@ -61,7 +61,7 @@ module.exports.run = async function ({ api, event, args }) {
 
         api.sendMessage(message, event.threadID, () => {
           fs.unlinkSync(filePath);
-        });
+        }, event.messageID);
       });
     }
   } catch (error) {
