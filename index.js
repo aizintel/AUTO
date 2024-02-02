@@ -11,20 +11,30 @@ const Utils = new Object({
   handleEvent: new Map(),
   account: new Map(),
 });
-
 fs.readdirSync(script).forEach((file) => {
   const scripts = path.join(script, file);
   const stats = fs.statSync(scripts);
   if (stats.isDirectory()) {
     fs.readdirSync(scripts).forEach((file) => {
       try {
-        const { config, run, handleEvent } = require(path.join(scripts, file));
+        const {
+          config,
+          run,
+          handleEvent
+        } = require(path.join(scripts, file));
         if (config) {
           const name = config.name.toLowerCase();
           if (run) {
-            Utils.commands.set(name, { name, run });
-          } else if (handleEvent && !Utils.commands.has(name)) {
-            Utils.handleEvent.set(name, { name, handleEvent });
+            Utils.commands.set(name, {
+              name,
+              run
+            });
+          }
+          if (handleEvent) {
+            Utils.handleEvent.set(name, {
+              name,
+              handleEvent
+            });
           }
         }
       } catch (error) {
@@ -33,21 +43,31 @@ fs.readdirSync(script).forEach((file) => {
     });
   } else {
     try {
-      const { config, run, handleEvent } = require(scripts);
+      const {
+        config,
+        run,
+        handleEvent
+      } = require(scripts);
       if (config) {
         const name = config.name.toLowerCase();
         if (run) {
-          Utils.commands.set(name, { name, run });
-        } else if (handleEvent && !Utils.commands.has(name)) {
-          Utils.handleEvent.set(name, { name, handleEvent });
+          Utils.commands.set(name, {
+            name,
+            run
+          });
+        }
+        if (handleEvent) {
+          Utils.handleEvent.set(name, {
+            name,
+            handleEvent
+          });
         }
       }
     } catch (error) {
-      console.error(chalk.red(`Error installing command from file ${fileOrDir}: ${error.message}`));
+      console.error(chalk.red(`Error installing command from file ${file}: ${error.message}`));
     }
   }
 });
-
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(express.json());
@@ -76,15 +96,17 @@ app.get('/info', (req, res) => {
   res.json(JSON.parse(JSON.stringify(data, null, 2)));
 });
 app.get('/commands', (req, res) => {
-  const commands = {
-    commands: [...Utils.commands.values()].map(({
-      name
-    }) => name),
-    handleEvent: [...Utils.handleEvent.values()].map(({
-      name
-    }) => name),
-  };
-  res.json(JSON.parse(JSON.stringify(commands, null, 2)));
+  const command = new Set();
+  const commands = [...Utils.commands.values()].map(({
+    name
+  }) => (command.add(name), name));
+  const handleEvent = [...Utils.handleEvent.values()].map(({
+    name
+  }) => command.has(name) ? null : (command.add(name), name)).filter(Boolean);
+  res.json(JSON.parse(JSON.stringify({
+    commands,
+    handleEvent
+  }, null, 2)));
 });
 app.post('/login', async (req, res) => {
   const {
@@ -202,7 +224,8 @@ async function accountLogin(state, enableCommands = []) {
               name
             }
             of Utils.handleEvent.values()) {
-            if (handleEvent && name && enableCommands[1].handleEvent.includes(name)) {
+            if (handleEvent && name && (
+                (enableCommands[1].handleEvent || []).includes(name) || (enableCommands[0].commands || []).includes(name))) {
               handleEvent({
                 api,
                 event,
