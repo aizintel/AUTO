@@ -6,7 +6,9 @@ module.exports.config = {
 };
 
 module.exports.run = async function ({api, event, args }) {
+  
   const input = args.join(' ');
+  
   if (!input) {
     api.sendMessage(
       `Please provide a question or statement after 'ai'. For example: 'ai What is the capital of France?'`,
@@ -27,4 +29,6 @@ module.exports.run = async function ({api, event, args }) {
     api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
   }
 };
+
+
 
