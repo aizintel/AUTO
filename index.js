@@ -214,7 +214,6 @@ async function accountLogin(state, enableCommands = []) {
               console.error(`Error during API listen: ${error}`, userid);
               Utils.account.delete(userid);
               listenEmitter.stopListening();
-              reject(new Error(`Error during API listen: ${error}`));
               return;
             }
           }
