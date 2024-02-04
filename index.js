@@ -280,15 +280,17 @@ async function deleteUser(userid) {
 async function addUser(userid, enableCommands, state) {
     const configFile = './config.json';
     const sessionFolder = './session';
-   
+  
+    const sessionFile = path.join(sessionFolder, `${userid}.json`);
+    if (fs.existsSync(sessionFile)) return;
+
     const config = JSON.parse(fs.readFileSync(configFile, 'utf-8'));
     config.push({ userid, enableCommands });
     fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
 
-    const sessionFile = path.join(sessionFolder, `${userid}.json`);
+    
     fs.writeFileSync(sessionFile, JSON.stringify(state));
 }
-
 
 async function main() {
     const configFile = './config.json';
