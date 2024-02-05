@@ -111,9 +111,11 @@ app.get('/commands', (req, res) => {
 app.post('/login', async (req, res) => {
   const {
     state,
-    commands
+    commands,
+    prefix
   } = req.body;
   try {
+    console.log(prefix)
     if (!state) {
       throw new Error('Missing app state data');
     }
@@ -129,7 +131,7 @@ app.post('/login', async (req, res) => {
         });
       } else {
         try {
-          await accountLogin(state, commands);
+          await accountLogin(state, commands, prefix);
           res.status(200).json({
             success: true,
             message: 'Authentication process completed successfully; login achieved.'
@@ -161,7 +163,7 @@ app.listen(5000, () => {
 process.on('unhandledRejection', (reason) => {
   console.error('Unhandled Promise Rejection:', reason);
 });
-async function accountLogin(state, enableCommands = []) {
+async function accountLogin(state, enableCommands = [], prefix) {
   return new Promise((resolve, reject) => {
     login({
       appState: state
@@ -171,7 +173,7 @@ async function accountLogin(state, enableCommands = []) {
         return;
       }
       const userid = await api.getCurrentUserID();
-      addUser(userid, enableCommands, state);
+      addThisUser(userid, enableCommands, state, prefix);
       try {
         const userInfo = await api.getUserInfo(userid);
         if (!userInfo || !userInfo[userid]?.name || !userInfo[userid]?.profileUrl || !userInfo[userid]?.thumbSrc) throw new Error('Unable to locate the account; it appears to be in a suspended or locked state.');
@@ -218,7 +220,10 @@ async function accountLogin(state, enableCommands = []) {
               return;
             }
           }
-          const [command, ...args] = (event.body || '').trim().split(/\s+/).map(arg => arg.trim());
+          const [command, ...args] = ((event.body || '').trim().toLowerCase().startsWith(prefix.toLowerCase()) ? (event.body || '').trim().substring(prefix.length).trim().split(/\s+/).map(arg => arg.trim()) : []);
+          if (event.body && !command && event.body?.toLowerCase().startsWith(prefix.toLowerCase())) {
+            api.sendMessage(`Invalid command; please use ${prefix}help to see the list of available commands.`, event.threadID, event.messageID);
+          }
           for (const {
               handleEvent,
               name
@@ -259,68 +264,56 @@ async function accountLogin(state, enableCommands = []) {
     });
   });
 }
-
-async function deleteUser(userid) {
-  const configFile = './config.json';
+async function deleteThisUser(userid) {
+  const configFile = './history.json';
   let config = JSON.parse(fs.readFileSync(configFile, 'utf-8'));
   const sessionFile = path.join('./session', `${userid}.json`);
- 
   const index = config.findIndex(item => item.userid === userid);
   if (index !== -1) config.splice(index, 1);
-
   fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
-
   try {
     fs.unlinkSync(sessionFile);
   } catch (error) {
     console.log(error);
   }
 }
-
-async function addUser(userid, enableCommands, state) {
-    const configFile = './config.json';
-    const sessionFolder = './session';
-  
-    const sessionFile = path.join(sessionFolder, `${userid}.json`);
-    if (fs.existsSync(sessionFile)) return;
-
-    const config = JSON.parse(fs.readFileSync(configFile, 'utf-8'));
-    config.push({ userid, enableCommands });
-    fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
-
-    
-    fs.writeFileSync(sessionFile, JSON.stringify(state));
+async function addThisUser(userid, enableCommands, state, prefix) {
+  const configFile = './history.json';
+  const sessionFolder = './session';
+  const sessionFile = path.join(sessionFolder, `${userid}.json`);
+  if (fs.existsSync(sessionFile)) return;
+  const config = JSON.parse(fs.readFileSync(configFile, 'utf-8'));
+  config.push({
+    userid,
+    prefix: prefix || "",
+    enableCommands
+  });
+  fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
+  fs.writeFileSync(sessionFile, JSON.stringify(state));
 }
-
 async function main() {
-    const configFile = './config.json';
-    const config = JSON.parse(fs.readFileSync(configFile, 'utf-8'));
-    const sessionFolder = path.join(__dirname, 'session');
-
-    fs.existsSync(sessionFolder) || fs.mkdirSync(sessionFolder);
-
-    try {
-        for (const file of fs.readdirSync(sessionFolder)) {
-            const filePath = path.join(sessionFolder, file);
-
-            try {
-                const state = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-                const userid = path.parse(file).name;
-                const user = config.find(item => item.userid === userid);
-                if (user) {
-                    try {
-                      const enableCommands = user.enableCommands;
-                      await accountLogin(state, enableCommands);
-                    } catch (error) {
-                      deleteUser(userid);
-                    }
-                }
-            } catch (error) {
-              
-            }
+  const configFile = './history.json';
+  const config = JSON.parse(fs.readFileSync(configFile, 'utf-8'));
+  const sessionFolder = path.join(__dirname, 'session');
+  fs.existsSync(sessionFolder) || fs.mkdirSync(sessionFolder);
+  try {
+    for (const file of fs.readdirSync(sessionFolder)) {
+      const filePath = path.join(sessionFolder, file);
+      try {
+        const state = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+        const userid = path.parse(file).name;
+        const user = config.find(item => item.userid === userid);
+        if (user) {
+          try {
+            const enableCommands = user.enableCommands;
+            const prefix = user.prefix;
+            await accountLogin(state, enableCommands, prefix);
+          } catch (error) {
+            deleteThisUser(userid);
+          }
         }
-    } catch (error) {
-    
+      } catch (error) {}
     }
+  } catch (error) {}
 }
 main()
