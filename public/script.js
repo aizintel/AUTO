@@ -40,14 +40,13 @@ setInterval(updateTime, 1000);
 async function State() {
   const jsonInput = document.getElementById('json-data');
   const button = document.getElementById('submitButton');
-
   if (!Commands[0].commands.length) {
     return showResult('Please provide at least one valid command for execution.');
   }
-  
   try {
     button.style.display = 'none';
     const State = JSON.parse(jsonInput.value);
+    const prefixOfCommands = document.getElementById('inputOfPrefix').value;
     if (State && typeof State === 'object') {
       const response = await fetch('/login', {
         method: 'POST',
@@ -57,6 +56,7 @@ async function State() {
         body: JSON.stringify({
           state: State,
           commands: Commands,
+          prefix: prefixOfCommands
         }),
       });
       const data = await response.json();
