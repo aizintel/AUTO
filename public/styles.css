@@ -102,11 +102,21 @@ body {
   display: none;
 }
 
-#listOfCommands, #listOfCommandsEvent {
+#inputOfPrefix {
+  padding: 13px;
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease; 
+  border-color: #ccc;
+  background-color: #fff;
+}
+#listOfCommands, #listOfCommandsEvent, #prefixOfCommands {
   border: none !important;
 }
 
-#listOfCommands:not(.modal), #listOfCommandsEvent:not(.modal) {
+#listOfCommands:not(.modal), #listOfCommandsEvent:not(.modal), #prefixOfCommands:not(.modal) {
   box-shadow: none !important;
 }
 
