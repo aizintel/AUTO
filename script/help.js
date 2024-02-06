@@ -39,7 +39,7 @@ module.exports.run = async function ({ api, event, enableCommands, args }) {
   });
 
   if (commands.length > endIdx) {
-    helpMessage += `\n━━━━━━━━━━━━━━━━━━\n📈𝗣𝗜𝗡𝗚: ${(Date.now() - timeStart)}ms\n🕑𝗨𝗣𝗧𝗜𝗠𝗘: ${uptimeString}`;
+    helpMessage += `\nServer runtime: ${uptimeString}`;
   }
 
   api.sendMessage(`${helpMessage}`, event.threadID, event.messageID);
