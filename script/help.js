@@ -18,7 +18,7 @@ module.exports.run = async function({
     const page = input ? parseInt(input) : 1;
     let startIdx = (page - 1) * commandsPerPage;
     let endIdx = startIdx + commandsPerPage;
-    let helpMessage = 'Commands:\n\n';
+    let helpMessage = 'Command List:\n\n';
     for (let i = startIdx; i < Math.min(endIdx, commands.length); i++) {
       helpMessage += `\t${i + 1}. ${commands[i]}\n`;
     }
