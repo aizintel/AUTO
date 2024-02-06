@@ -65,6 +65,7 @@ body {
  .container-buttons .btn {
      margin: 5px;
 }
+
  #result {
      padding: 10px;
      margin-top: 20px;
@@ -73,43 +74,49 @@ body {
  .center-placeholder::placeholder {
      text-align: center;
 }
- .form-check {
-     display: flex;
-     margin-top: 10px;
-     padding: 14px;
-     align-items: center;
-     border: 1px solid #ccc;
-     border-radius: 8px;
-     cursor: pointer;
-     transition: background-color 0.3s ease, border-color 0.3s ease;
-     border-color: #ccc;
-     background-color: #fff;
+
+.form-check {
+  display: flex;
+  margin-top: 10px;
+  padding: 14px;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease; 
+  border-color: #ccc;
+  background-color: #fff;
 }
- .form-check:hover {
-     background-color: #f0f0f0;
-     border-color: #333;
+
+.form-check:hover {
+  background-color: #f0f0f0; 
+  border-color: #333; 
 }
- .form-check-input {
-     margin-right: 10px;
-     opacity: 0;
+
+.form-check-input {
+  margin-right: 10px; 
+  opacity: 0;
 }
- .disable {
-     display: none;
+
+.disable {
+  display: none;
 }
- #inputOfPrefix {
-     padding: 13px;
-     width: 200px;
-     border: 1px solid #ccc;
-     border-radius: 8px;
-     cursor: pointer;
-     transition: background-color 0.3s ease, border-color 0.3s ease;
-     border-color: #ccc;
-     background-color: #fff;
+
+#inputOfPrefix, #inputOfAdmin {
+  padding: 13px;
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease; 
+  border-color: #ccc;
+  background-color: #fff;
 }
- #listOfCommands, #listOfCommandsEvent, #prefixOfCommands {
-     border: none !important;
+#listOfCommands, #listOfCommandsEvent, #prefixOfCommands, #adminOfCommands {
+  border: none !important;
 }
- #listOfCommands:not(.modal), #listOfCommandsEvent:not(.modal), #prefixOfCommands:not(.modal) {
-     box-shadow: none !important;
+
+#listOfCommands:not(.modal), #listOfCommandsEvent:not(.modal), #prefixOfCommands:not(.modal), #adminOfCommands:not(.modal) {
+  box-shadow: none !important;
 }
- 
+
