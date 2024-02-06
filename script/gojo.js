@@ -1,20 +1,11 @@
-/* 
-API BY DEKU
-contact: https://facebook.com/joshg101
-*/
 const {get} = require('axios');
-const url = "http://eu4.diresnode.com:3301"; //available model: baymax_gpt, gojo_gpt
+const url = "http://eu4.diresnode.com:3301";
+
 module.exports = {
     config: {
-        name: "gojo", //rename it if u want
-        hasPermssion: 0,
-        version: "1.0.0",
-        commandCategory: "AI",
-        credits: "Deku",
-        cooldowns: 0,
-        usages: "[ask]/clear to clear history", 
-        description: "Talk to GOJO AI the blindfolded sorcerer (with continues conversation)"
-    },
+        name: 'gojo',
+        version: '1.0.0',
+    };
     run: async function({api, event, args}){
             let prompt = args.join(' '), id = event.senderID;
              function r(msg){
