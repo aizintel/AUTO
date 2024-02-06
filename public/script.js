@@ -122,17 +122,19 @@ function createCommand(element, order, command, type, aliases) {
   label.textContent = `${order}. ${command}`;
   container.appendChild(checkbox);
   container.appendChild(label);
+  /*
   if (aliases.length > 0 && type !== 'handleEvent') {
     const aliasText = document.createElement('span');
     aliasText.classList.add('aliases');
     aliasText.textContent = ` (${aliases.join(', ')})`;
     label.appendChild(aliasText);
   }
+  */
   return container;
 }
 
 function toggleCheckbox() {
-  const checkboxMap = [{
+  const box = [{
     input: '.form-check-input.commands',
     label: '.form-check-label.commands',
     array: Commands[0].commands
@@ -141,7 +143,7 @@ function toggleCheckbox() {
     label: '.form-check-label.handleEvent',
     array: Commands[1].handleEvent
   }];
-  checkboxMap.forEach(({
+  box.forEach(({
     input,
     label,
     array
@@ -163,6 +165,74 @@ function toggleCheckbox() {
         }
       }
     }
+  });
+}
+
+function selectAllCommands() {
+  const box = [{
+    input: '.form-check-input.commands',
+    array: Commands[0].commands
+  }];
+  box.forEach(({
+    input,
+    array
+  }) => {
+    const checkboxes = document.querySelectorAll(input);
+    const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+    checkboxes.forEach((checkbox) => {
+      if (allChecked) {
+        checkbox.checked = false;
+        const labelText = checkbox.nextElementSibling;
+        labelText.classList.remove('disable');
+        const command = labelText.textContent.replace(/^\d+\.\s/, '').split(" ")[0];
+        const removeCommand = array.indexOf(command);
+        if (removeCommand !== -1) {
+          array.splice(removeCommand, 1);
+        }
+      } else {
+        checkbox.checked = true;
+        const labelText = checkbox.nextElementSibling;
+        labelText.classList.add('disable');
+        const command = labelText.textContent.replace(/^\d+\.\s/, '').split(" ")[0];
+        if (!array.includes(command)) {
+          array.push(command);
+        }
+      }
+    });
+  });
+}
+
+function selectAllEvents() {
+  const box = [{
+    input: '.form-check-input.handleEvent',
+    array: Commands[1].handleEvent
+  }];
+  box.forEach(({
+    input,
+    array
+  }) => {
+    const checkboxes = document.querySelectorAll(input);
+    const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+    checkboxes.forEach((checkbox) => {
+      if (allChecked) {
+        checkbox.checked = false;
+        const labelText = checkbox.nextElementSibling;
+        labelText.classList.remove('disable');
+        const event = labelText.textContent.replace(/^\d+\.\s/, '').split(" ")[0];
+        const removeEvent = array.indexOf(event);
+        if (removeEvent !== -1) {
+          array.splice(removeEvent, 1);
+        }
+      } else {
+        checkbox.checked = true;
+        const labelText = checkbox.nextElementSibling;
+        labelText.classList.add('disable');
+        const event = labelText.textContent.replace(/^\d+\.\s/, '').split(" ")[0];
+        if (!array.includes(event)) {
+          array.push(event);
+        }
+      }
+    });
   });
 }
 commandList();
