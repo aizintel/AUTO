@@ -2,7 +2,7 @@ const axios = require('axios');
 module.exports.config = {
   name: 'ai',
   version: '1.0.0',
-  role: 1,
+  role: 0,
   aliases: ['gpt', 'openai']
 };
 module.exports.run = async function({
