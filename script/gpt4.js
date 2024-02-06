@@ -5,7 +5,7 @@ module.exports = {
     config: {
         name: 'gpt4',
         version: '1.0.0',
-};
+},
     run: async function({api, event, args}){
             let prompt = args.join(' '), id = event.senderID;
            async function r(msg){
