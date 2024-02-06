@@ -17,10 +17,10 @@ module.exports = {
     guide: {
       en: '{p}{n}',
     }
-  },
+  };
 
 
-  onStart: async function ({ api, event }) {
+  module.exports.run = async function ({ api, event }) {
     const threadID = event.threadID;
 
 
