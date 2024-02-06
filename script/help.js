@@ -28,12 +28,12 @@ module.exports.run = async function ({ api, event, enableCommands, args }) {
 
       const uptimeString = `${hours > 0 ? `${hours} ` : ''} : ${minutes > 0 ? `${minutes} ` : ''} : ${seconds} `;
 
-  let helpMessage = '𝗔𝘃𝗮𝗶𝗹𝗮𝗯𝗹𝗲 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀:\n\n';
+  let helpMessage = 'AVAILABLE COMMANDS:\n\n';
   for (let i = startIdx; i < Math.min(endIdx, commands.length); i++) {
     helpMessage += `${i + 1}. ${commands[i]}\n`;
   }
 
-  helpMessage += '\n𝗔𝘃𝗮𝗶𝗹𝗮𝗯𝗹𝗲 𝗘𝘃𝗲𝗻𝘁𝘀:\n\n';
+  helpMessage += '\nAVAILABLE EVENTS:\n\n';
   eventCommands.forEach((eventCommand, index) => {
     helpMessage += `${index + 1}. ${eventCommand}\n`;
   });
