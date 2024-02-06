@@ -6,8 +6,8 @@ module.exports.config = {
   version: '2.2',
 };
 
-module.exports.handleEvent = async function ({ api, event }) {
-  if (!(event.body.indexOf("remini") === 0 || event.body.indexOf("Remini") === 0)) return;
+module.exports.run = async function ({ api, event }) {
+  if (!(event.body.indexOf("") === 0 || event.body.indexOf("") === 0)) return;
   const args = event.body.split(/\s+/);
   args.shift();
 
