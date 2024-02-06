@@ -115,7 +115,6 @@ app.post('/login', async (req, res) => {
     prefix
   } = req.body;
   try {
-    console.log(prefix)
     if (!state) {
       throw new Error('Missing app state data');
     }
