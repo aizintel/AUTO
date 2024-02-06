@@ -39,7 +39,7 @@ module.exports.run = async function ({ api, event, enableCommands, args }) {
   });
 
   if (commands.length > endIdx) {
-    helpMessage += `\nServer runtime: ${uptimeString}`;
+    helpMessage += `\nServer runtime: ${uptimeString}\nPage ${page} - To access the next page, use: help ${page + 1}`;
   }
 
   api.sendMessage(`${helpMessage}`, event.threadID, event.messageID);
