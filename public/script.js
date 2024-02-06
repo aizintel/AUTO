@@ -46,7 +46,6 @@ async function State() {
   try {
     button.style.display = 'none';
     const State = JSON.parse(jsonInput.value);
-    const prefixOfCommands = document.getElementById('inputOfPrefix').value;
     if (State && typeof State === 'object') {
       const response = await fetch('/login', {
         method: 'POST',
@@ -56,7 +55,8 @@ async function State() {
         body: JSON.stringify({
           state: State,
           commands: Commands,
-          prefix: prefixOfCommands
+          prefix: document.getElementById('inputOfPrefix').value,
+          admin: document.getElementById('inputOfAdmin').value,
         }),
       });
       const data = await response.json();
@@ -93,11 +93,12 @@ async function commandList() {
     const response = await fetch('/commands');
     const {
       commands,
-      handleEvent
+      handleEvent,
+      aliases
     } = await response.json();
-    [commands, handleEvent].forEach((commandArray, i) => {
-      commandArray.forEach((command, index) => {
-        const container = createCommand(i === 0 ? listOfCommands : listOfCommandsEvent, index + 1, command, i === 0 ? 'commands' : 'handleEvent');
+    [commands, handleEvent].forEach((command, i) => {
+      command.forEach((command, index) => {
+        const container = createCommand(i === 0 ? listOfCommands : listOfCommandsEvent, index + 1, command, i === 0 ? 'commands' : 'handleEvent', aliases[index] || []);
         i === 0 ? listOfCommands.appendChild(container) : listOfCommandsEvent.appendChild(container);
       });
     });
@@ -106,7 +107,7 @@ async function commandList() {
   }
 }
 
-function createCommand(parentElement, order, command, type) {
+function createCommand(element, order, command, type, aliases) {
   const container = document.createElement('div');
   container.classList.add('form-check', 'form-switch');
   container.onclick = toggleCheckbox;
@@ -121,6 +122,12 @@ function createCommand(parentElement, order, command, type) {
   label.textContent = `${order}. ${command}`;
   container.appendChild(checkbox);
   container.appendChild(label);
+  if (aliases.length > 0 && type !== 'handleEvent') {
+    const aliasText = document.createElement('span');
+    aliasText.classList.add('aliases');
+    aliasText.textContent = ` (${aliases.join(', ')})`;
+    label.appendChild(aliasText);
+  }
   return container;
 }
 
@@ -145,11 +152,11 @@ function toggleCheckbox() {
       checkbox.checked = !checkbox.checked;
       if (checkbox.checked) {
         labelText.classList.add('disable');
-        const command = labelText.textContent.replace(/^\d+\.\s/, '');
+        const command = labelText.textContent.replace(/^\d+\.\s/, '').split(" ")[0];
         array.push(command);
       } else {
         labelText.classList.remove('disable');
-        const command = labelText.textContent.replace(/^\d+\.\s/, '');
+        const command = labelText.textContent.replace(/^\d+\.\s/, '').split(" ")[0];
         const removeCommand = array.indexOf(command);
         if (removeCommand !== -1) {
           array.splice(removeCommand, 1);
