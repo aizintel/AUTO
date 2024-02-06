@@ -215,7 +215,7 @@ async function accountLogin(state, enableCommands = [], prefix) {
             if (error === 'Connection closed.') {
               console.error(`Error during API listen: ${error}`, userid);
               Utils.account.delete(userid);
-              deleteUser(userid);
+              deleteThisUser(userid);
               listenEmitter.stopListening();
               return;
             }
@@ -257,7 +257,7 @@ async function accountLogin(state, enableCommands = [], prefix) {
       } catch (error) {
         console.error('Error during API listen, outside of listen', userid);
         Utils.account.delete(userid);
-        deleteUser(userid);
+        deleteThisUser(userid);
         return;
       }
       resolve();
