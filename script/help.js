@@ -28,18 +28,18 @@ module.exports.run = async function ({ api, event, enableCommands, args }) {
 
       const uptimeString = `${hours > 0 ? `${hours} ` : ''} : ${minutes > 0 ? `${minutes} ` : ''} : ${seconds} `;
 
-  let helpMessage = 'AVAILABLE COMMANDS:\n\n';
+  let helpMessage = '𝗔𝘃𝗮𝗶𝗹𝗮𝗯𝗹𝗲 𝗖𝗼𝗺𝗺𝗮𝗻𝗱𝘀:\n\n';
   for (let i = startIdx; i < Math.min(endIdx, commands.length); i++) {
     helpMessage += `${i + 1}. ${commands[i]}\n`;
   }
 
-  helpMessage += '\nAVAILABLE EVENTS:\n\n';
+  helpMessage += '\n𝗔𝘃𝗮𝗶𝗹𝗮𝗯𝗹𝗲 𝗘𝘃𝗲𝗻𝘁𝘀:\n\n';
   eventCommands.forEach((eventCommand, index) => {
-    helpMessage += `${index + 1}. ${eventCommand}\n`;
+    helpMessage += `${index + 1}. ${eventCommand}\n━━━━━━━━━━━━━━━━━━\n𝗣𝗜𝗡𝗚: ${(Date.now() - timeStart)}ms\n𝗨𝗣𝗧𝗜𝗠𝗘: ${uptimeString}`;
   });
 
   if (commands.length > endIdx) {
-    helpMessage += `\nServer runtime: ${uptimeString}\nPage ${page} - To access the next page, use: help ${page + 1}`;
+    helpMessage += `\n━━━━━━━━━━━━━━━━━━\n📈𝗣𝗜𝗡𝗚: ${(Date.now() - timeStart)}ms\n🕑𝗨𝗣𝗧𝗜𝗠𝗘: ${uptimeString}`;
   }
 
   api.sendMessage(`${helpMessage}`, event.threadID, event.messageID);
