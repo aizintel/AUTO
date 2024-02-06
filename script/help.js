@@ -35,11 +35,11 @@ module.exports.run = async function ({ api, event, enableCommands, args }) {
 
   helpMessage += '\n𝗔𝘃𝗮𝗶𝗹𝗮𝗯𝗹𝗲 𝗘𝘃𝗲𝗻𝘁𝘀:\n\n';
   eventCommands.forEach((eventCommand, index) => {
-    helpMessage += `${index + 1}. ${eventCommand}`;
+    helpMessage += `${index + 1}. ${eventCommand}\n`;
   });
 
   if (commands.length > endIdx) {
-    helpMessage += `\n━━━━━━━━━━━━━━━━━━\n𝗣𝗜𝗡𝗚: ${(Date.now() - timeStart)}ms\n𝗨𝗣𝗧𝗜𝗠𝗘: ${uptimeString}`;
+    helpMessage += `\n━━━━━━━━━━━━━━━━━━\n𝗣𝗜𝗡𝗚: ${(Date.now() - timeStart)}ms\n𝗨𝗣𝗧𝗜𝗠𝗘: ${uptimeString}\n`;
   }
 
   api.sendMessage(`${helpMessage}`, event.threadID, event.messageID);
