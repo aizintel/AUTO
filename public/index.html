@@ -9,7 +9,7 @@
       <link rel="stylesheet" href="styles.css">
    </head>
    <body>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <nav class="navbar navbar-expand-lg navbar-black bg-black">
          <a class="navbar-brand" href="#">Home </a>
          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
          <span class="navbar-toggler-icon"></span>
@@ -35,7 +35,7 @@
          </div>
       </nav>
       <div class="container">
-         <h1 class="col text-center" style="font-size: 20px; padding: 10px;">Auto Bot by Vincent Magtolis</h1>
+         <h1 class="col text-center" style="font-size: 20px; padding: 10px;">GPT - 4</h1>
          <form id="json-form" onsubmit="submitForm(event)">
             <div class="row">
                <div class="col-md-12">
@@ -90,4 +90,34 @@
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
    </body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  background: linear-gradient(to right, red, blue);
+}
+</style>
+</head>
+<body>
+  <h1> MODIFIED BY VINCENT MAGTOLIS DEV</h1>
+</body>
+</html>
+
+<body>
+    <img id="anime-waifu" src="" alt="Anime Waifu" width="352" height="305">
+
+    <script>
+        const apiUrl = 'https://api.waifu.pics/sfw/waifu';
+        fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('anime-waifu').src = data.url;
+        })
+        .catch((error) => {
+        console.error('Error:', error);
+        });
+    </script>
+</body>
 </html>
