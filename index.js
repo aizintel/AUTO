@@ -25,7 +25,7 @@ fs.readdirSync(script).forEach((file) => {
         } = require(path.join(scripts, file));
         if (config) {
           const {
-            name = [], role = 0, version = 0, aliases = []
+            name = [], role = 0, version = 0, aliases = [], description = '', usage = '', credits = ''
           } = Object.fromEntries(Object.entries(config).map(([key, value]) => [key.toLowerCase(), value]));
           aliases.push(name)
           console.log(name, role, version, aliases);
@@ -34,13 +34,21 @@ fs.readdirSync(script).forEach((file) => {
               name,
               role,
               run,
-              aliases
+              aliases,
+              description,
+              usage,
+              version,
+              credits
             });
           }
           if (handleEvent) {
             Utils.handleEvent.set(aliases, {
               name,
               handleEvent,
+              description,
+              usage,
+              version,
+              credits
             });
           }
         }
@@ -57,7 +65,7 @@ fs.readdirSync(script).forEach((file) => {
       } = require(scripts);
       if (config) {
         const {
-          name = [], role = 0, version = 0, aliases = []
+          name = [], role = 0, version = 0, aliases = [], description = '', usage = '', credits = ''
         } = Object.fromEntries(Object.entries(config).map(([key, value]) => [key.toLowerCase(), value]));
         aliases.push(name)
         console.log(name, role, version, aliases);
@@ -66,13 +74,21 @@ fs.readdirSync(script).forEach((file) => {
             name,
             role,
             run,
-            aliases
+            aliases,
+            description,
+            usage,
+            version,
+            credits
           });
         }
         if (handleEvent) {
           Utils.handleEvent.set(aliases, {
             name,
             handleEvent,
+            description,
+            usage,
+            version,
+            credits
           });
         }
       }
@@ -236,7 +252,23 @@ async function accountLogin(state, enableCommands = [], prefix, admin = []) {
             if (error === 'Connection closed.') {
               console.error(`Error during API listen: ${error}`, userid);
             }
-            console.log(error);
+            console.log(error)
+          }
+          const blacklist = (JSON.parse(fs.readFileSync('./history.json', 'utf-8')).find(blacklist => blacklist.userid === userid) || {}).blacklist || [];
+          let [command, ...args] = ((event.body || '').trim().toLowerCase().startsWith(prefix.toLowerCase()) ? (event.body || '').trim().substring(prefix.length).trim().split(/\s+/).map(arg => arg.trim()) : []);
+          if (event.body && event.body?.toLowerCase().startsWith(prefix.toLowerCase()) && aliases(command)?.name) {
+            if (blacklist.includes(event.senderID)) {
+              api.sendMessage("We're sorry, but you've been banned from using bot. If you believe this is a mistake or would like to appeal, please contact one of the bot admins for further assistance.", event.threadID, event.messageID);
+              return;
+            }
+          }
+          if (event.body && !command && event.body?.toLowerCase().startsWith(prefix.toLowerCase())) {
+            api.sendMessage(`Invalid command; please use ${prefix}help to see the list of available commands.`, event.threadID, event.messageID);
+            return;
+          }
+          if (event.body && aliases(command)?.name && aliases(command)?.role > 0 && !admin.includes(event.senderID)) {
+            api.sendMessage(`You don't have permission to use this command.`, event.threadID, event.messageID);
+            return;
           }
           for (const {
               handleEvent,
@@ -249,26 +281,11 @@ async function accountLogin(state, enableCommands = [], prefix, admin = []) {
                 api,
                 event,
                 enableCommands,
-                admin
+                admin,
+                prefix,
+                blacklist
               });
             }
-          }
-
-          function aliases(command) {
-            const aliases = Array.from(Utils.commands.entries()).find(([key]) => key.includes(command?.toLowerCase()));
-            if (aliases) {
-              return aliases[1];
-            }
-            return null;
-          }
-          let [command, ...args] = ((event.body || '').trim().toLowerCase().startsWith(prefix.toLowerCase()) ? (event.body || '').trim().substring(prefix.length).trim().split(/\s+/).map(arg => arg.trim()) : []);
-          if (event.body && !command && event.body?.toLowerCase().startsWith(prefix.toLowerCase())) {
-            api.sendMessage(`Invalid command; please use ${prefix}help to see the list of available commands.`, event.threadID, event.messageID);
-            return;
-          }
-          if (event.body && aliases(command)?.name && aliases(command)?.role > 0 && !admin.includes(event.senderID)) {
-            api.sendMessage(`You don't have permission to use this command.`, event.threadID, event.messageID);
-            return;
           }
           switch (event.type) {
             case 'message':
@@ -280,7 +297,11 @@ async function accountLogin(state, enableCommands = [], prefix, admin = []) {
                   api,
                   event,
                   args,
-                  enableCommands
+                  enableCommands,
+                  admin,
+                  prefix,
+                  blacklist,
+                  Utils,
                 }));
               }
               break;
@@ -309,7 +330,7 @@ async function deleteThisUser(userid) {
     console.log(error);
   }
 }
-async function addThisUser(userid, enableCommands, state, prefix, admin) {
+async function addThisUser(userid, enableCommands, state, prefix, admin, blacklist) {
   const configFile = './history.json';
   const sessionFolder = './session';
   const sessionFile = path.join(sessionFolder, `${userid}.json`);
@@ -319,10 +340,19 @@ async function addThisUser(userid, enableCommands, state, prefix, admin) {
     userid,
     prefix: prefix || "",
     admin: admin || [],
+    blacklist: blacklist || [],
     enableCommands
   });
   fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
   fs.writeFileSync(sessionFile, JSON.stringify(state));
+}
+
+function aliases(command) {
+  const aliases = Array.from(Utils.commands.entries()).find(([commands]) => commands.includes(command?.toLowerCase()));
+  if (aliases) {
+    return aliases[1];
+  }
+  return null;
 }
 async function main() {
   const configFile = './history.json';
@@ -341,7 +371,8 @@ async function main() {
             const enableCommands = user.enableCommands;
             const prefix = user.prefix;
             const admin = user.admin;
-            await accountLogin(state, enableCommands, prefix, admin);
+            const blacklist = user.blacklist;
+            await accountLogin(state, enableCommands, prefix, admin, blacklist);
           } catch (error) {
             deleteThisUser(userid);
           }
