@@ -1,10 +1,10 @@
 body {
      padding: 20px;
-     background-color: #f8f9fa;
+     background-color: #FDBD01;
      font-family: 'Poppins', sans-serif;
 }
  .container {
-     background-color: #ffffff;
+     background-color: #FDBD01;
      border-radius: 10px;
      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
      padding: 20px;
@@ -12,10 +12,10 @@ body {
      margin-bottom: 20px;
 }
  h1 {
-     color: #343a40;
+     color: #FDBD01;
 }
  label {
-     color: #495057;
+     color: #FDBD01;
 }
  .centered-textarea {
      display: block;
@@ -119,4 +119,3 @@ body {
 #listOfCommands:not(.modal), #listOfCommandsEvent:not(.modal), #prefixOfCommands:not(.modal), #adminOfCommands:not(.modal) {
   box-shadow: none !important;
 }
-
