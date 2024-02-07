@@ -17,7 +17,7 @@ module.exports = {
     guide: {
       en: '{p}{n}',
     }
-  };
+  },
 
 
   module.exports.run = async function ({ api, event }) {
