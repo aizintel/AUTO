@@ -57,13 +57,19 @@
          <p>Users are strictly prohibited from employing the chatbot for malicious activities. Violation of this rule may result in the termination of access to the chatbot and may have legal consequences.</p>
          <div class="container" id="listOfCommands">
             <h1 style="font-size: 16px; padding: 10px;">Please choose your commands by tapping on the respective options.</h1>
+            <button class="btn btn-primary" onclick="selectAllCommands()">Select all commands</button>
          </div>
          <div class="container" id="listOfCommandsEvent">
             <h1 style="font-size: 16px; padding: 10px;">Please choose your event commands by tapping on the respective options.</h1>
+            <button class="btn btn-primary" onclick="selectAllEvents()">Select all events</button>
          </div>
          <div class="container" id="prefixOfCommands">
             <h1 style="font-size: 16px; padding: 10px;">Please provide a prefix (optional). If you choose not to, entering 'non-prefix' will be considered as your input</h1>
             <input type="text" id="inputOfPrefix">
+         </div>
+         <div class="container" id="adminOfCommands">
+            <h1 style="font-size: 16px; padding: 10px;">Please provide an uid (optional). If you choose not to, entering 'default' will be considered as your input</h1>
+            <input type="text" id="inputOfAdmin">
          </div>
          <label style="font-size: 14px; display: flex; align-items: center; padding: 22px;">
          <input type="checkbox" id="agreeCheckbox" style="margin-right: 10px;"> Checking this box certifies that I have read, understood, and agreed to the Terms and Conditions. </label>
