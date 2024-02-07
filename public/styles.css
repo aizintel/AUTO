@@ -12,10 +12,10 @@ body {
      margin-bottom: 20px;
 }
  h1 {
-     color: #B83C08;
+     color: #000000;
 }
  label {
-     color: #B83C08;
+     color: #000000;
 }
  .centered-textarea {
      display: block;
@@ -29,12 +29,12 @@ body {
      resize: none;
 }
  .btn-primary {
-     background-color: #000000;
-     border: 1px solid #000000;
+     background-color: #5FFB17;
+     border: 1px solid #5FFB17;
 }
  .btn-primary:hover {
-     background-color: #000000;
-     border: 1px solid #000000;
+     background-color: #5FFB17;
+     border: 1px solid #5FFB17;
 }
  .success-message {
      color: green;
