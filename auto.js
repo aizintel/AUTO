@@ -6,7 +6,7 @@ const app = express();
 const chalk = require('chalk');
 const bodyParser = require('body-parser');
 const script = path.join(__dirname, 'script');
-const config = fs.existsSync('data.json') ? JSON.parse(fs.readFileSync('data/data.json', 'utf8')) : createConfig();
+const config = fs.existsSync('./data') ? JSON.parse(fs.readFileSync('./data/config.json', 'utf8')) : createConfig();
 const Utils = new Object({
   commands: new Map(),
   handleEvent: new Map(),
@@ -366,9 +366,9 @@ async function accountLogin(state, enableCommands = [], prefix, admin = []) {
   });
 }
 async function deleteThisUser(userid) {
-  const configFile = './history.json';
+  const configFile = './data/history.json';
   let config = JSON.parse(fs.readFileSync(configFile, 'utf-8'));
-  const sessionFile = path.join('./session', `${userid}.json`);
+  const sessionFile = path.join('./data/session', `${userid}.json`);
   const index = config.findIndex(item => item.userid === userid);
   if (index !== -1) config.splice(index, 1);
   fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
@@ -379,8 +379,8 @@ async function deleteThisUser(userid) {
   }
 }
 async function addThisUser(userid, enableCommands, state, prefix, admin, blacklist) {
-  const configFile = './history.json';
-  const sessionFolder = './session';
+  const configFile = './data/history.json';
+  const sessionFolder = './data/session';
   const sessionFile = path.join(sessionFolder, `${userid}.json`);
   if (fs.existsSync(sessionFile)) return;
   const config = JSON.parse(fs.readFileSync(configFile, 'utf-8'));
@@ -409,10 +409,10 @@ async function main() {
   });
   const cacheFile = './script/cache';
   if (!fs.existsSync(cacheFile)) fs.mkdirSync(cacheFile);
-  const configFile = './history.json';
+  const configFile = './data/history.json';
   if (!fs.existsSync(configFile)) fs.writeFileSync(configFile, '[]', 'utf-8');
   const config = JSON.parse(fs.readFileSync(configFile, 'utf-8'));
-  const sessionFolder = path.join(__dirname, 'session');
+  const sessionFolder = path.join('./data/session');
   if (!fs.existsSync(sessionFolder)) fs.mkdirSync(sessionFolder);
   try {
     for (const file of fs.readdirSync(sessionFolder)) {
@@ -452,7 +452,9 @@ function createConfig() {
       autoMarkRead: false
     }
   }];
-  fs.writeFileSync('config.json', JSON.stringify(config, null, 2));
+  const dataFolder = './data';
+  if (!fs.existsSync(dataFolder)) fs.mkdirSync(dataFolder);
+  fs.writeFileSync('./data/config.json', JSON.stringify(config, null, 2));
   return config;
 }
 async function createThread(threadID, api) {
