@@ -12,7 +12,6 @@ const Utils = new Object({
   account: new Map(),
   cooldowns: new Map(),
 });
-fs.existsSync('./script/cache') || fs.mkdirSync('./script/cache');
 fs.readdirSync(script).forEach((file) => {
   const scripts = path.join(script, file);
   const stats = fs.statSync(scripts);
