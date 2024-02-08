@@ -3,7 +3,12 @@ module.exports.config = {
   name: 'ai',
   version: '1.0.0',
   role: 0,
-  aliases: ['gpt', 'openai']
+  hasPrefix: false,
+  aliases: ['gpt', 'openai'],
+  description: "An AI command powered by GPT-4",
+  usage: "Ai [promot]",
+  credits: 'Developer',
+  cooldown: 5,
 };
 module.exports.run = async function({
   api,
