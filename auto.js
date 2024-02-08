@@ -3,6 +3,7 @@ const path = require('path');
 const login = require('./fb-chat-api/index');
 const express = require('express');
 const app = express();
+const chalk = require('chalk');
 const bodyParser = require('body-parser');
 const script = path.join(__dirname, 'script');
 const config = fs.existsSync('data.json') ? JSON.parse(fs.readFileSync('data/data.json', 'utf8')) : createConfig();
