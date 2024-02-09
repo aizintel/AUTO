@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const login = require('./fb-chat-api/index');
+const login = require('./fb-chat-api-temp/index');
 const express = require('express');
 const app = express();
 const chalk = require('chalk');
@@ -272,7 +272,7 @@ async function accountLogin(state, enableCommands = [], prefix, admin = []) {
           let database = fs.existsSync('./data/database.json') ? JSON.parse(fs.readFileSync('./data/database.json', 'utf8')) : createDatabase();
           let data = Array.isArray(database) ? database.find(item => Object.keys(item)[0] === event?.threadID) : {};
           let adminIDS = data ? database : createThread(event.threadID, api);
-          let blacklist = (JSON.parse(fs.readFileSync('./history.json', 'utf-8')).find(blacklist => blacklist.userid === userid) || {}).blacklist || [];
+          let blacklist = (JSON.parse(fs.readFileSync('./data/history.json', 'utf-8')).find(blacklist => blacklist.userid === userid) || {}).blacklist || [];
           let hasPrefix = (event.body && aliases((event.body || '')?.trim().toLowerCase().split(/ +/).shift())?.hasPrefix == false) ? '' : prefix;
           let [command, ...args] = ((event.body || '').trim().toLowerCase().startsWith(hasPrefix?.toLowerCase()) ? (event.body || '').trim().substring(hasPrefix?.length).trim().split(/\s+/).map(arg => arg.trim()) : []);
           if (hasPrefix && aliases(command)?.hasPrefix === false) {
