@@ -2,12 +2,18 @@ const axios = require('axios');
 const fs = require("fs");
 
 module.exports.config = {
-  name: 'pinterest',
-  version: '1.4',
+  name: "pin",
+  version: "1.4",
+  hasPermission: 0,
+  usePrefix: true,
+  credits: "Hazeyy",
+  description: "( 𝙿𝚒𝚗𝚝𝚎𝚛𝚎𝚜𝚝 )",
+  commandCategory: "𝚗𝚘 𝚙𝚛𝚎𝚏𝚒𝚡",
+  usages: "( 𝚂𝚎𝚊𝚛𝚌𝚑 𝙸𝚖𝚊𝚐𝚎𝚜 𝚘𝚗 𝙿𝚒𝚗𝚝𝚎𝚛𝚎𝚜𝚝 )",
 };
 
-module.exports.run = async function ({ api, event }) {
-  if (!(event.body.indexOf("") === 0 || event.body.indexOf("") === 0)) return;
+module.exports.handleEvent = async function ({ api, event }) {
+  if (!(event.body.indexOf("pin") === 0 || event.body.indexOf("Pin") === 0)) return;
   const args = event.body.split(/\s+/);
   args.shift();
   let text = args.join(" ");
