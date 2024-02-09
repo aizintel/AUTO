@@ -123,15 +123,15 @@
                      uptimeUser.innerHTML = `Uptime: ${timeFormat(time)}`;
                      userInfo.appendChild(userName);
                      userInfo.appendChild(profileLink);
-                     userInfo.appendChild(uptimeUser);
+                     //userInfo.appendChild(uptimeUser);
                      userCard.appendChild(image);
                      userCard.appendChild(userInfo);
                      userOnline.appendChild(userCard);
          
-                     const intervalId = setInterval(() => {
+                     /*const intervalId = setInterval(() => {
                          user.time++;
                          updateTimer(userCard, user.time);
-                     }, 1000);
+                     }, 1000); */
                  });
              } catch (error) {
                  console.error(error);
