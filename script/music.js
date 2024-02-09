@@ -3,7 +3,12 @@ module.exports.config = {
   name: "music",
   version: "1.0.0",
   role: 0,
-  aliases: ['play']
+  hasPrefix: true,
+  aliases: ['play'],
+  usage: 'Music [promt]',
+  description: 'Search music in youtube',
+  credits: 'Deveploper',
+  cooldown: 5
 };
 module.exports.run = async function({
   api,
