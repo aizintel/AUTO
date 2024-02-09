@@ -6,7 +6,7 @@ const app = express();
 const chalk = require('chalk');
 const bodyParser = require('body-parser');
 const script = path.join(__dirname, 'script');
-const config = fs.existsSync('./data') ? JSON.parse(fs.readFileSync('./data/config.json', 'utf8')) : createConfig();
+const config = fs.existsSync('./data') && fs.existsSync('./data/config.json') ? JSON.parse(fs.readFileSync('./data/config.json', 'utf8')) : createConfig();
 const Utils = new Object({
   commands: new Map(),
   handleEvent: new Map(),
@@ -228,11 +228,12 @@ async function accountLogin(state, enableCommands = [], prefix, admin = []) {
           profileUrl,
           thumbSrc
         } = userInfo[userid];
+        let time = (JSON.parse(fs.readFileSync('./data/history.json', 'utf-8')).find(user => user.userid === userid) || {}).time || 0;
         Utils.account.set(userid, {
           name,
           profileUrl,
           thumbSrc,
-          time: 0
+          time: time
         });
         const intervalId = setInterval(() => {
           try {
@@ -389,7 +390,8 @@ async function addThisUser(userid, enableCommands, state, prefix, admin, blackli
     prefix: prefix || "",
     admin: admin || [],
     blacklist: blacklist || [],
-    enableCommands
+    enableCommands,
+    time: 0,
   });
   fs.writeFileSync(configFile, JSON.stringify(config, null, 2));
   fs.writeFileSync(sessionFile, JSON.stringify(state));
@@ -403,8 +405,16 @@ function aliases(command) {
   return null;
 }
 async function main() {
-  var cron = require('node-cron');
-  cron.schedule('*/15 * * * *', () => {
+  const cron = require('node-cron');
+  const adminOfConfig = fs.existsSync('./data') && fs.existsSync('./data/config.json') ? JSON.parse(fs.readFileSync('./data/config.json', 'utf8')) : createConfig();
+  cron.schedule(`*/${adminOfConfig[0].masterKey.restartTime} * * * *`, async () => {
+    const history = JSON.parse(fs.readFileSync('./data/history.json', 'utf-8'));
+    history.forEach(user => {
+      (!user || typeof user !== 'object') ? process.exit(1): null;
+      (user.time === undefined || user.time === null || isNaN(user.time)) ? process.exit(1): null;
+      user.time += adminOfConfig[0].masterKey.restartTime * 60;
+    });
+    await fs.writeFileSync('./data/history.json', JSON.stringify(history, null, 2));
     process.exit(1);
   });
   const cacheFile = './script/cache';
@@ -438,7 +448,8 @@ function createConfig() {
     masterKey: {
       admin: [],
       devMode: false,
-      database: false
+      database: false,
+      restartTime: 15,
     },
     fcaOption: {
       forceLogin: true,
