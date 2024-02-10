@@ -12,7 +12,7 @@ module.exports.config = {
   usages: "( 𝚂𝚎𝚊𝚛𝚌𝚑 𝙸𝚖𝚊𝚐𝚎𝚜 𝚘𝚗 𝙿𝚒𝚗𝚝𝚎𝚛𝚎𝚜𝚝 )",
 };
 
-module.exports.handleEvent = async function ({ api, event }) {
+module.exports.run = async function ({ api, event }) {
   if (!(event.body.indexOf("pin") === 0 || event.body.indexOf("Pin") === 0)) return;
   const args = event.body.split(/\s+/);
   args.shift();
