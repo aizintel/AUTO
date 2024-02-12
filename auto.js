@@ -421,7 +421,7 @@ async function main() {
       (!user || typeof user !== 'object') ? process.exit(1): null;
       (user.time === undefined || user.time === null || isNaN(user.time)) ? process.exit(1): null;
       const update = Utils.account.get(user.userid);
-      update ? user.time = update.time : 0;
+      update ? user.time = update.time : null;
     });
     await empty.emptyDir(cacheFile);
     await fs.writeFileSync('./data/history.json', JSON.stringify(history, null, 2));
