@@ -6,6 +6,7 @@ const app = express();
 const chalk = require('chalk');
 const bodyParser = require('body-parser');
 const script = path.join(__dirname, 'script');
+const cron = require('node-cron');
 const config = fs.existsSync('./data') && fs.existsSync('./data/config.json') ? JSON.parse(fs.readFileSync('./data/config.json', 'utf8')) : createConfig();
 const Utils = new Object({
   commands: new Map(),
@@ -405,18 +406,7 @@ function aliases(command) {
   return null;
 }
 async function main() {
-  const cron = require('node-cron');
-  const adminOfConfig = fs.existsSync('./data') && fs.existsSync('./data/config.json') ? JSON.parse(fs.readFileSync('./data/config.json', 'utf8')) : createConfig();
-  cron.schedule(`*/${adminOfConfig[0].masterKey.restartTime} * * * *`, async () => {
-    const history = JSON.parse(fs.readFileSync('./data/history.json', 'utf-8'));
-    history.forEach(user => {
-      (!user || typeof user !== 'object') ? process.exit(1): null;
-      (user.time === undefined || user.time === null || isNaN(user.time)) ? process.exit(1): null;
-      user.time += adminOfConfig[0].masterKey.restartTime * 60;
-    });
-    await fs.writeFileSync('./data/history.json', JSON.stringify(history, null, 2));
-    process.exit(1);
-  });
+  const empty = require('fs-extra');
   const cacheFile = './script/cache';
   if (!fs.existsSync(cacheFile)) fs.mkdirSync(cacheFile);
   const configFile = './data/history.json';
@@ -424,6 +414,19 @@ async function main() {
   const config = JSON.parse(fs.readFileSync(configFile, 'utf-8'));
   const sessionFolder = path.join('./data/session');
   if (!fs.existsSync(sessionFolder)) fs.mkdirSync(sessionFolder);
+  const adminOfConfig = fs.existsSync('./data') && fs.existsSync('./data/config.json') ? JSON.parse(fs.readFileSync('./data/config.json', 'utf8')) : createConfig();
+  cron.schedule(`*/${adminOfConfig[0].masterKey.restartTime} * * * *`, async () => {
+    const history = JSON.parse(fs.readFileSync('./data/history.json', 'utf-8'));
+    history.forEach(user => {
+      (!user || typeof user !== 'object') ? process.exit(1): null;
+      (user.time === undefined || user.time === null || isNaN(user.time)) ? process.exit(1): null;
+      const update = Utils.account.get(user.userid);
+      update ? user.time += update.time : null;
+    });
+    await empty.emptyDir(cacheFile);
+    await fs.writeFileSync('./data/history.json', JSON.stringify(history, null, 2));
+    process.exit(1);
+  });
   try {
     for (const file of fs.readdirSync(sessionFolder)) {
       const filePath = path.join(sessionFolder, file);
