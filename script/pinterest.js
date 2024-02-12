@@ -1,55 +1,37 @@
-const axios = require('axios');
-const fs = require("fs");
-
 module.exports.config = {
-  name: 'pinterest',
-  version: '1.4',
+    name: "pinterest",
+    version: "1.0.0",
+    role: 0,
+    credits: "Marjhun Baylon",
+    description: "Image search",
+    hasPrefix: false,
+    usages: "[Text]",
+    cooldowns: 0,
 };
+module.exports.run = async function({ api, event, args }) {
+    const axios = require("axios");
+    const fs = require("fs-extra");
+    const request = require("request");
+    const keySearch = args.join(" ");
+    if(keySearch.includes("-") == false) return api.sendMessage('Please enter in the format, example: pinterest Naruto - 10 (it depends on you how many images you want to appear in the result)', event.threadID, event.messageID)
+    const keySearchs = keySearch.substr(0, keySearch.indexOf('-'))
+    const numberSearch = keySearch.split("-").pop() || 6
+    const res = await axios.get(`https://ali-api-mrbaylon4.replit.app/api?search=${encodeURIComponent(keySearchs)}`);
+  const data = res.data && res.data.data;
 
-module.exports.run = async function ({ api, event }) {
-  if (!(event.body.indexOf("") === 0 || event.body.indexOf("") === 0)) return;
-  const args = event.body.split(/\s+/);
-  args.shift();
-  let text = args.join(" ");
-  const search = text.split(">")[0].trim();
-  if (!search) {
-    return api.sendMessage("🤖 𝙷𝚎𝚕𝚕𝚘 𝚝𝚘 𝚞𝚜𝚎 𝙿𝚒𝚗𝚝𝚎𝚝𝚎𝚛𝚎𝚜𝚝.\n\n𝙿𝚕𝚎𝚊𝚜𝚎 𝚞𝚜𝚎: 𝙿𝚒𝚗 [ 𝚗𝚊𝚖𝚎 ] - [ 𝚊𝚖𝚘𝚞𝚗𝚝 ] \n\n𝙸𝚏 𝚗𝚘 𝚌𝚘𝚞𝚗𝚝 𝚄𝚜𝚎: 𝙿𝚒𝚗 [ 𝚗𝚊𝚖𝚎 ] 𝚒𝚝 𝚠𝚒𝚕𝚕 𝚐𝚎𝚗𝚎𝚛𝚊𝚝𝚎 5 𝚒𝚖𝚊𝚐𝚎𝚜 𝚠𝚒𝚝𝚑 𝚗𝚘 𝚌𝚘𝚞𝚗𝚝 𝚗𝚎𝚎𝚍𝚎𝚍.", event.threadID);
-  }
-  let count;
-  if (text.includes("-")) {
-    count = text.split("-")[1].trim()
-  } else {
-    count = 5;
-  }
-
-  try {
-    const response = await axios.get(`https://code-merge-api-hazeyy01.replit.app/pinterest/api?search=${search}`);
-    api.sendMessage('🕟 | 𝚂𝚎𝚊𝚛𝚌𝚑𝚒𝚗𝚐 𝚘𝚗 𝙿𝚒𝚗𝚝𝚎𝚛𝚎𝚜𝚝, 𝙿𝚕𝚎𝚊𝚜𝚎 𝚠𝚊𝚒𝚝...', event.threadID);
-
-    const data = response.data;
-    if (data.error) {
-      return api.sendMessage(data.error, event.threadID);
-    } else {
-      let attachment = [];
-      let storedPath = [];
-      for (let i = 0; i < data.count; i++) {
-        if (i == count) break;
-        let path = __dirname + "/cache/" + Math.floor(Math.random() * 99999999) + ".jpg";
-        let pic = await axios.get(data.data[i], { responseType: "arraybuffer" });
-        fs.writeFileSync(path, pic.data);
-        storedPath.push(path);
-        attachment.push(fs.createReadStream(path))
-      }
-      api.sendMessage({ body: `🤖 𝐏𝐢𝐧𝐭𝐞𝐫𝐞𝐬𝐭 ( 𝐀𝐈 )\n\n🖋️ 𝐒𝐞𝐚𝐫𝐜𝐡: '${search}'\n\n» 𝙽𝚞𝚖𝚋𝚎𝚛: ${attachment.length} - ${data.count} «`, attachment: attachment }, event.threadID, () => {
-        for (const item of storedPath) {
-          fs.unlinkSync(item)
-        }
-      }, event.messageID);
+    var num = 0;
+    var imgData = [];
+    for (var i = 0; i < parseInt(numberSearch); i++) {
+      let path = __dirname + `/cache/${num+=1}.jpg`;
+      let getDown = (await axios.get(`${data[i]}`, { responseType: 'arraybuffer' })).data;
+      fs.writeFileSync(path, Buffer.from(getDown, 'utf-8'));
+      imgData.push(fs.createReadStream(__dirname + `/cache/${num}.jpg`));
     }
-  } catch (error) {
-    console.error(error);
-    return api.sendMessage("🚫 𝙰𝚗 𝚎𝚛𝚛𝚘𝚛 𝚘𝚌𝚌𝚞𝚛𝚎𝚍 𝚠𝚑𝚒𝚕𝚎 𝚏𝚎𝚝𝚌𝚑𝚒𝚗𝚐 𝚍𝚊𝚝𝚊 𝚏𝚛𝚘𝚖 𝙿𝚒𝚗𝚝𝚎𝚛𝚎𝚜𝚝 API.", event.threadID);
-  }
+    api.sendMessage({
+        attachment: imgData,
+        body: numberSearch + 'Search results for keyword: '+ keySearchs
+    }, event.threadID, event.messageID)
+    for (let ii = 1; ii < parseInt(numberSearch); ii++) {
+        fs.unlinkSync(__dirname + `/cache/${ii}.jpg`)
+    }
 };
-
-module.exports.run = async function ({ api, event }) {};
