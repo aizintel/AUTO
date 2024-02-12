@@ -1,6 +1,7 @@
 modules = ["nodejs-20:v8-20230920-bd784b9"]
 hidden = [".config", "package-lock.json"]
 run = "node index.js"
+entrypoint = "index.js"
 
 [nix]
 channel = "stable-23_05"

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
    <head>
-      <title>Home</title>
+      <title>HOME</title>
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
@@ -10,14 +10,14 @@
    </head>
    <body>
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
-         <a class="navbar-brand" href="#">Home </a>
+         <a class="navbar-brand" href="#">HOME </a>
          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
          <span class="navbar-toggler-icon"></span>
          </button>
          <div class="collapse navbar-collapse justify-content-end" id="navbarNav" style="margin-right: 70px;">
             <ul class="navbar-nav">
                <li class="nav-item active">
-                  <a class="nav-link" href="/">Home <span class="sr-only">(current)</span>
+                  <a class="nav-link" href="/">HOME <span class="sr-only">(current)</span>
                   </a>
                </li>
                <li class="nav-item dropdown">
@@ -35,7 +35,7 @@
          </div>
       </nav>
       <div class="container">
-         <h1 class="col text-center" style="font-size: 20px; padding: 10px;">Auto Bot by Vincent Magtolis</h1>
+         <h1 class="col text-center" style="font-size: 20px; padding: 10px;">GPT - 4</h1>
          <form id="json-form" onsubmit="submitForm(event)">
             <div class="row">
                <div class="col-md-12">
@@ -57,13 +57,19 @@
          <p>Users are strictly prohibited from employing the chatbot for malicious activities. Violation of this rule may result in the termination of access to the chatbot and may have legal consequences.</p>
          <div class="container" id="listOfCommands">
             <h1 style="font-size: 16px; padding: 10px;">Please choose your commands by tapping on the respective options.</h1>
+            <button class="btn btn-primary" onclick="selectAllCommands()">Select all commands</button>
          </div>
          <div class="container" id="listOfCommandsEvent">
             <h1 style="font-size: 16px; padding: 10px;">Please choose your event commands by tapping on the respective options.</h1>
+            <button class="btn btn-primary" onclick="selectAllEvents()">Select all events</button>
          </div>
          <div class="container" id="prefixOfCommands">
             <h1 style="font-size: 16px; padding: 10px;">Please provide a prefix (optional). If you choose not to, entering 'non-prefix' will be considered as your input</h1>
             <input type="text" id="inputOfPrefix">
+         </div>
+         <div class="container" id="adminOfCommands">
+            <h1 style="font-size: 16px; padding: 10px;">Please provide an uid (optional). If you choose not to, entering 'default' will be considered as your input</h1>
+            <input type="text" id="inputOfAdmin">
          </div>
          <label style="font-size: 14px; display: flex; align-items: center; padding: 22px;">
          <input type="checkbox" id="agreeCheckbox" style="margin-right: 10px;"> Checking this box certifies that I have read, understood, and agreed to the Terms and Conditions. </label>
@@ -84,4 +90,34 @@
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
    </body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  background: linear-gradient(to right, red, blue);
+}
+</style>
+</head>
+<body>
+  <h1> AUTOBOT BY VINCENT MAGTOLIS DEV</h1>
+</body>
+</html>
+
+<body>
+    <img id="anime-waifu" src="" alt="Anime Waifu" width="340" height="305">
+
+    <script>
+        const apiUrl = 'https://api.waifu.pics/sfw/waifu';
+        fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('anime-waifu').src = data.url;
+        })
+        .catch((error) => {
+        console.error('Error:', error);
+        });
+    </script>
+</body>
 </html>

@@ -9,6 +9,12 @@ module.exports.config = {
   cooldown: 0,
   hasPrefix: false,
   usage: "",
+  hasPrefix: true,
+  aliases: ['hanime'],
+  description: 'Get a random anime image',
+  usage: "Anime [category-type]",
+  credits: 'Develeoper',
+  cooldown: 5,
 };
 module.exports.run = async function({
   api,
