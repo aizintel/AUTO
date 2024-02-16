@@ -1,51 +1,40 @@
 module.exports.config = {
-  name: 'teach',
-  version: '1.0.0',
-  role: 0,
-  description: "teach bot's like a person",
-  usage: "teach [key] | [result]",
-  credits: 'Developer',
-  cooldown: 3,
+    name: 'teach',
+    version: '1.0.0',
+    role: 0,
+    description: "Teach the bot to respond like a person",
+    usage: "teach [question] | [answer]",
+    credits: 'Developer',
+    cooldown: 3,
 };
-module.exports.run = async function({
-  api,
-  event,
-  args
-}) {
-  const axios = require("axios");
-  let {
-    messageID,
-    threadID,
-    senderID,
-    body
-  } = event;
-  let tid = threadID,
-    mid = messageID;
-  const input = args.join(" ").split("|");
-  if (input.length < 2) {
-    if (args.length == 0) {
-      return api.sendMessage("Usage: teach [ ask ] | [ answer ]", tid, mid);
-    } else if (args.join(" ").includes("|")) {
-      return api.sendMessage("Please provide both a question and an answer.", tid, mid);
-    } else {
-      return api.sendMessage("Please use '|' character to separate the question and answer.", tid, mid);
+
+
+module.exports.run = async function({ api, event, args }) {
+    const axios = require("axios");
+    let { messageID, threadID } = event;
+    const input = args.join(" ").split("|");
+
+    if (input.length < 2) {
+        if(args.length == 0){
+            return api.sendMessage("Usage: teach [question] | [answer]", threadID, messageID);
+        } else if(args.join(" ").includes("|")) {
+            return api.sendMessage("Please provide both a question and an answer.", threadID, messageID);
+        } else {
+            return api.sendMessage("Please use '|' character to separate the question and answer.", threadID, messageID);
+        }
     }
-  }
-  const ask = encodeURIComponent(input[0].trim());
-  const answer = encodeURIComponent(input[1].trim());
-  try {
-    const res = await axios.get(`https://simsimi.fun/api/v2/?mode=teach&lang=ph&message=${ask}&answer=${answer}`);
-    const respond = res.data.success;
-    if (res.data.error) {
-      api.sendMessage(`Error: ${res.data.error}`, tid, (error, info) => {
-        if (error) {}
-      }, mid);
-    } else {
-      api.sendMessage(`Success teaching, ask: ${ask} | response: ${answer}`, tid, (error, info) => {
-        if (error) {}
-      }, mid);
+    const question = encodeURIComponent(input[0].trim());
+    const answer = encodeURIComponent(input[1].trim());
+
+    try {
+        const response = await axios.get(`https://simsimi.fun/api/v2/?mode=teach&lang=ph&message=${question}&answer=${answer}`);
+        const responseData = response.data;
+        if (responseData.error) {
+            api.sendMessage(`Error: ${responseData.error}`, threadID, messageID);
+        } else {
+            api.sendMessage(`Successfully taught. Question: ${input[0].trim()} | Answer: ${input[1].trim()}`, threadID, messageID);
+        }
+    } catch (error) {
+        api.sendMessage("An error occurred while fetching the data.", threadID, messageID);
     }
-  } catch (error) {
-    api.sendMessage("An error occurred while fetching the data.", tid, mid);
-  }
 };
