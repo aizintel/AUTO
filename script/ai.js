@@ -24,7 +24,7 @@ module.exports.run = async function({
   try {
     const {
       data
-    } = await axios.get(`https://openaikey.onrender.com/api?prompt=${encodeURIComponent(input)}`);
+    } = await axios.get(`https://openaikey-x20f.onrender.com/api?prompt=${encodeURIComponent(input)}`);
     const response = data.response;
     api.sendMessage(response, event.threadID, event.messageID);
   } catch (error) {
