@@ -8,13 +8,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link rel="stylesheet" href="styles.css">
    </head>
-   <body>
-      <style>
-         body {
-            background:red
-            font-family:cursive
-         }
-      </style>
+   <body style="background: lightblue; ">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
          <a class="navbar-brand" href="#">Home </a>
          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,7 +35,7 @@
          </div>
       </nav>
       <div class="container">
-         <h1 class="col text-center" style="font-size: 20px; padding: 10px;">GPT - 4</h1>
+         <h1 class="col text-center" style="font-size: 20px; padding: 10px;">Ulric-Bot</h1>
          <form id="json-form" onsubmit="submitForm(event)">
             <div class="row">
                <div class="col-md-12">
@@ -69,9 +63,9 @@
             <input type="text" id="inputOfAdmin">
          </div>
          <label style="font-size: 14px; display: flex; align-items: center; padding: 22px;">
-         <input type="checkbox" id="agreeCheckbox" style="margin-right: 10px;"> Checking this box certifies that I have read, understood, and agreed to the Terms and Conditions. </label>
-         <div class="col text-center">
-            <button class="btn btn-primary" onclick="State()" disabled id="submitButton" style="width: 100%">Submit</button>
+         <input type="checkbox" id="agreeCheckbox" style="margin-right: 10px;"> En cochant cette case vous acceptez nos politiques de confidentialité et d'utilisation.q</label>
+        <div class="col text-center">
+            <button class="btn btn-primary" onclick="State()" disabled id="submitButton" style="width: 100%">Valider</button>
          </div>
       </div>
       <div id="result" class="container text-center" style="display: none;"></div>
