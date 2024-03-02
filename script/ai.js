@@ -17,17 +17,17 @@ module.exports.run = async function({
 }) {
   const input = args.join(' ');
   if (!input) {
-    api.sendMessage(`Please provide a question or statement after 'ai'. For example: 'ai What is the capital of France?'`, event.threadID, event.messageID);
+    api.sendMessage(`Salut! je suis votre assistant virtuel.Comment puis je vous aider aujourd'hui ?`, event.threadID, event.messageID);
     return;
   }
-  api.sendMessage(`🔍 "${input}"`, event.threadID, event.messageID);
+  api.sendMessage(`Recherche🔍 "${input}"`, event.threadID, event.messageID);
   try {
     const {
       data
     } = await axios.get(`https://openaikey-x20f.onrender.com/api?prompt=${encodeURIComponent(input)}`);
     const response = data.response;
-    api.sendMessage(response, event.threadID, event.messageID);
+    api.sendMessage(`|Ulric-Bot projet|n\n\response, event.threadID, event.messageID);
   } catch (error) {
-    api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
+    api.sendMessage('Une erreur est survenue lors de la recherche d'informations...', event.threadID, event.messageID);
   }
 };
