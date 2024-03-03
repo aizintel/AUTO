@@ -26,7 +26,7 @@ module.exports.run = async function({
       data
     } = await axios.get(`https://openaikey-x20f.onrender.com/api?prompt=${encodeURIComponent(input)}`);
     const response = data.response;
-    api.sendMessage(`|Ulric-Bot projet|n\n\response, event.threadID, event.messageID);
+    api.sendMessage(`|Ulric-Bot projet|, response, event.threadID, event.messageID);
   } catch (error) {
     api.sendMessage('Une erreur est survenue lors de la recherche d'informations...', event.threadID, event.messageID);
   }
