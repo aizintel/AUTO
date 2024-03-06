@@ -6,7 +6,7 @@ module.exports.config = {
   aliases: ['info'],
   description: "Beginner's guide",
   usage: "Help [page] or [command]",
-  credits: 'Develeoper',
+  credits: 'Ulric Atayi',
 };
 module.exports.run = async function({
   api,
@@ -25,7 +25,7 @@ module.exports.run = async function({
       let page = 1;
       let start = (page - 1) * pages;
       let end = start + pages;
-      let helpMessage = `Command List:\n\n`;
+      let helpMessage = `•Liste des Commandes•:\n\n`;
       for (let i = start; i < Math.min(end, commands.length); i++) {
         helpMessage += `\t${i + 1}. 「 ${prefix}${commands[i]} 」\n`;
       }
@@ -33,18 +33,18 @@ module.exports.run = async function({
       eventCommands.forEach((eventCommand, index) => {
         helpMessage += `\t${index + 1}. 「 ${prefix}${eventCommand} 」\n`;
       });
-      helpMessage += `\nPage ${page}/${Math.ceil(commands.length / pages)}. To view the next page, type '${prefix}help page number'. To view information about a specific command, type '${prefix}help command name'.`;
+      helpMessage += `\nPage ${page}/${Math.ceil(commands.length / pages)}. Pour voir la page suivante tapez: '${prefix}help suivi du numéro de la page.'. Pour avoir des informations spécifiques sur une commande,tapez: '${prefix}help suivi du nom de la commande'.`;
       api.sendMessage(helpMessage, event.threadID, event.messageID);
     } else if (!isNaN(input)) {
       const page = parseInt(input);
       const pages = 20;
       let start = (page - 1) * pages;
       let end = start + pages;
-      let helpMessage = `Command List:\n\n`;
+      let helpMessage = `Liste des commandes:\n\n`;
       for (let i = start; i < Math.min(end, commands.length); i++) {
         helpMessage += `\t${i + 1}. 「 ${prefix}${commands[i]} 」\n`;
       }
-      helpMessage += '\nEvent List:\n\n';
+      helpMessage += '\nComandes Event:\n\n';
       eventCommands.forEach((eventCommand, index) => {
         helpMessage += `\t${index + 1}. 「 ${prefix}${eventCommand} 」\n`;
       });
@@ -91,7 +91,7 @@ module.exports.handleEvent = async function({
     messageID,
     body
   } = event;
-  const message = prefix ? 'This is my prefix: ' + prefix : "Sorry i don't have prefix";
+  const message = prefix ? 'Mon prefix est: ' + prefix : "Désolé je n'ai pas de prefix.";
   if (body?.toLowerCase().startsWith('prefix')) {
     api.sendMessage(message, threadID, messageID);
   }
