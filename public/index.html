@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
    <head>
-      <title>Ulric-Bot</title>
+      <title>Accueil</title>
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
@@ -10,32 +10,32 @@
    </head>
    <body>
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
-         <a class="navbar-brand" href="#">Home </a>
+         <a class="navbar-brand" href="#">Accueil </a>
          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
          <span class="navbar-toggler-icon"></span>
          </button>
          <div class="collapse navbar-collapse justify-content-end" id="navbarNav" style="margin-right: 70px;">
             <ul class="navbar-nav">
                <li class="nav-item active">
-                  <a class="nav-link" href="/">Home <span class="sr-only">(current)</span>
+                  <a class="nav-link" href="/">Accueil<span class="sr-only">(current)</span>
                   </a>
                </li>
                <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Features </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                     <a class="dropdown-item" href="#">Cookies Extractor</a>
+                     <a class="dropdown-item" href="#">Extracteur de cookies</a>
                      <div class="dropdown-divider"></div>
-                     <a class="dropdown-item" href="/step_by_step_guide">Step-by-Step Guide</a>
+                     <a class="dropdown-item" href="/step_by_step_guide">Guide</a>
                   </div>
                </li>
                <li class="nav-item">
-                  <a class="nav-link" href="online_user">Active</a>
+                  <a class="nav-link" href="online_user">Actifs</a>
                </li>
             </ul>
          </div>
       </nav>
       <div class="container">
-         <h1 class="col text-center" style="font-size: 20px; padding: 10px;">Ulric-Bot</h1>
+         <h1 class="col text-center" style="font-size: 20px; padding: 10px;">Accueil</h1>
          <form id="json-form" onsubmit="submitForm(event)">
             <div class="row">
                <div class="col-md-12">
@@ -43,15 +43,15 @@
                </div>
             </div>
          </form>
-         <p style=" margin-top: 10px">Merci d'utiliser Ulric-Bot! Veuillez entrer votre appstate ici...</p>
+         <p style=" margin-top: 10px">Merci d'utiliser notre service ! Veuillez entrer votre appstate ici...</p>
       </div>
       <div class="container">
          <div class="container" id="listOfCommands">
-            <h1 style="font-size: 16px; padding: 10px;">Choisissez vos commandes en tapant dessus ou appuyez sur "Toutes les commandes" pour tout choisir !</h1>
+            <h1 style="font-size: 16px; padding: 10px;">Choisissez vos commandes en tapant dessus ou appuyez sur "Tout sélectionner" pour tout choisir !</h1>
             <button class="btn btn-primary" onclick="selectAllCommands()">Toutes les commandes</button>
          </div>
          <div class="container" id="listOfCommandsEvent">
-            <h1 style="font-size: 16px; padding: 10px;">Faîtes pareil ici!</h1>
+            <h1 style="font-size: 16px; padding: 10px;">Choisissez vos commandes event en tapant dessus ou appuyez sur "Tout sélectionner" pour tout choisir !</h1>
             <button class="btn btn-primary" onclik="selectAllEvents()">Tout sélectionner</button>
          </div>
          <div class="container" id="prefixOfCommands">
@@ -63,16 +63,16 @@
             <input type="text" id="inputOfAdmin">
          </div>
          <label style="font-size: 14px; display: flex; align-items: center; padding: 22px;">
-         <input type="checkbox" id="agreeCheckbox" style="margin-right: 10px;"> En cochant cette case vous acceptez nos politiques de confidentialité et d'utilisation.q</label>
+         <input type="checkbox" id="agreeCheckbox" style="margin-right: 10px;"> En cochant cette case vous acceptez nos politiques de confidentialité et d'utilisation.</label>
         <div class="col text-center">
             <button class="btn btn-primary" onclick="State()" disabled id="submitButton" style="width: 100%">Valider</button>
          </div>
       </div>
       <div id="result" class="container text-center" style="display: none;"></div>
       <div class="footer">
-         <p>Time: <span id="time"></span>
+         <p>Heure: <span id="time"></span>
          </p>
-         <p>Ping: <span id="ping"></span>
+         <p>Vitesse: <span id="ping"></span>
          </p>
       </div>
       <script src="script.js"></script>
