@@ -1,10 +1,10 @@
 body {
      padding: 20px;
-     background-color: #f8f9fa;
+     background-color: lightblue;
      font-family: 'Poppins', sans-serif;
 }
  .container {
-     background-color: #ffffff;
+     background-color: gray;
      border-radius: 10px;
      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
      padding: 20px;
