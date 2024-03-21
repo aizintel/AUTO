@@ -10,8 +10,7 @@ module.exports = {
     category: "ai",
     guide: {
       en: "{pn} <query>"
-    }
-  },
+    }  },
   onStart: async function ({ message, event, api, args }) {
     try {
       const prompt = args.join(" ");
