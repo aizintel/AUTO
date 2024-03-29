@@ -26,7 +26,7 @@ module.exports.run = async function({
       data
     } = await axios.get(`https://api-soyeon.onrender.com/api?prompt=${encodeURIComponent(input)}`);
     const response = data.response;
-    api.sendMessage(response + '\n\nhttps://www.facebook.com/localhostsoriano', event.threadID, event.messageID);
+    api.sendMessage(response + '\n\nhttps://bit.ly/localhostsoriano', event.threadID, event.messageID);
   } catch (error) {
     api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
   }
