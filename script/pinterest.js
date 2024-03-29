@@ -5,7 +5,7 @@ module.exports.config = {
   name: "pinterest",
   version: "1.0.0",
   role: 0,
-  hasPrefix: false,
+  hasPrefix: true,
   description: "Search for images on Pinterest.",
   usages: "pinterest [query] - [amount]",
   credits: "Developer",
