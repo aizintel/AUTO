@@ -1,7 +1,7 @@
 const os = require("os");
 
 module.exports.config = {
-  name: "uptime",
+  name: "upt",
   version: "1.0.2",
   role: 0,
   credits: "khaile",
