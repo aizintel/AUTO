@@ -5,7 +5,7 @@ const startTime = new Date();
 
 module.exports = {
   config: {
-    name: "uptime",
+    name: "upt",
     description: "Retrieve system information and check server latency.",
     usage: ":uptime",
     author: "Rui",
