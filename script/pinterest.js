@@ -9,6 +9,7 @@ module.exports.config = {
   description: "Search for images on Pinterest.",
   usages: "pinterest [query] - [amount]",
   credits: "Developer",
+  cooldown: 0,
 };
 async function getPinterest(img) {
   try {
