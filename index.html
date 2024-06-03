@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geography Trivia Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="game">
+            <h1>Geography Trivia Game</h1>
+            <div id="level-info"></div>
+            <div id="question"></div>
+            <div id="answers"></div>
+            <button id="next-button" onclick="nextLevel()">Next</button>
+            <button id="restart-button" onclick="restartGame()">Restart</button>
+        </div>
+        <div id="congratulations" class="hidden">
+            <h1>Congratulations!</h1>
+            <p>You have completed the game!</p>
+            <button onclick="restartGame()">Restart</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
