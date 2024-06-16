@@ -69,7 +69,7 @@ module.exports.run = async function({
       url: messageReply.body
     };
     request(options, function(error, response, body) {
-      if (error) return api.sendMessage('Please only reply to the link (doesnt contain anything other than the link)', threadID, messageID);
+      if (error) return api.sendMessage('Please only reply to the link (https://www.facebook.com/61555814951548)', threadID, messageID);
       const load = cheerio.load(body);
       load('.language-js').each((index, el) => {
         if (index !== 0) return;
