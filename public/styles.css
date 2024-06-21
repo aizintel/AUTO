@@ -1,122 +1,209 @@
 body {
-     padding: 20px;
-     background-color: #f8f9fa;
-     font-family: 'Poppins', sans-serif;
-}
- .container {
-     background-color: #ffffff;
-     border-radius: 10px;
-     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-     padding: 20px;
-     margin-top: 20px;
-     margin-bottom: 20px;
-}
- h1 {
-     color: #343a40;
-}
- label {
-     color: #495057;
-}
- .centered-textarea {
-     display: block;
-     margin: 0 auto;
-     width: 100%;
-     min-height: 150px;
-     padding: 10px;
-     box-sizing: border-box;
-     border: 1px solid #ced4da;
-     border-radius: 5px;
-     resize: none;
-}
- .btn-primary {
-     background-color: #007bff;
-     border: 1px solid #007bff;
-}
- .btn-primary:hover {
-     background-color: #0056b3;
-     border: 1px solid #0056b3;
-}
- .success-message {
-     color: green;
-     margin-top: 10px;
-}
- .footer {
-     background-color: rgba(255, 255, 255, 0.7);
-     padding: 10px;
-     text-align: center;
-     font-size: 16px;
-     color: #555;
-     margin-top: 50px;
-     border-top: 1px solid #ccc;
-     position: fixed;
-     bottom: 0;
-     left: 0;
-     width: 100%;
-}
- .footer p {
-     margin: 0;
-     display: inline-block;
-     margin-right: 30px;
-}
- .container-buttons {
-     margin-top: 20px;
-     text-align: center;
-}
- .container-buttons .btn {
-     margin: 5px;
+    padding: 20px;
+    background-color: #0e0e0e;
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    background-image: url('https://media4.giphy.com/media/jaOXKCxtBPLieRLI0c/giphy.gif?cid=6c09b952uys1wv9s8v4hnc7dbo339rgcjiunfvyovq9u6m5n&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
- #result {
-     padding: 10px;
-     margin-top: 20px;
-     border-radius: 5px;
+.container {
+    background-image: url('https://media4.giphy.com/media/jaOXKCxtBPLieRLI0c/giphy.gif?cid=6c09b952uys1wv9s8v4hnc7dbo339rgcjiunfvyovq9u6m5n&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: rgba(26, 26, 26, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 6px 6px rgba(0, 0, 0, 0.23);
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
- .center-placeholder::placeholder {
-     text-align: center;
+
+
+h1 {
+    color: #fff;
+}
+
+label {
+    color: #ccc;
+}
+
+.navbar {
+    background-color: #000;
+    border-radius: 10px;
+}
+
+.navbar-brand {
+    color: #fff;
+}
+
+.navbar-light .navbar-toggler-icon {
+    background-color: #fff;
+}
+
+.centered-textarea {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    min-height: 150px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid violet;
+    border-radius: 5px;
+    resize: none;
+    color: #fff;
+}
+
+.btn-primary {
+    background-color: red;
+    border: 1px solid red;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border: 1px solid #0056b3;
+}
+
+.success-message {
+    color: green;
+    margin-top: 10px;
+}
+
+.footer {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    text-align: center;
+    font-size: 16px;
+    color: red;
+    margin-top: 50px;
+    border-top: 1px solid red;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.footer p {
+    margin: 0;
+    display: inline-block;
+    margin-right: 30px;
+}
+
+.container-buttons {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.container-buttons .btn {
+    margin: 5px;
+}
+
+#result {
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.center-placeholder::placeholder {
+    text-align: center;
+    color: #ccc;
 }
 
 .form-check {
-  display: flex;
-  margin-top: 10px;
-  padding: 14px;
-  align-items: center;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease; 
-  border-color: #ccc;
-  background-color: #fff;
+    display: flex;
+    margin-top: 10px;
+    padding: 14px;
+    align-items: center;
+    border: 1px solid #444;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease; 
+    background-color: #1a1a1a;
 }
 
 .form-check:hover {
-  background-color: #f0f0f0; 
-  border-color: #333; 
+    background-color: #222; 
+    border-color: #777; 
 }
 
 .form-check-input {
-  margin-right: 10px; 
-  opacity: 0;
+    margin-right: 10px; 
+    opacity: 0;
 }
 
 .disable {
-  display: none;
+    display: none;
 }
 
 #inputOfPrefix, #inputOfAdmin {
-  padding: 13px;
-  width: 200px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease; 
-  border-color: #ccc;
-  background-color: #fff;
+    padding: 13px;
+    width: 200px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease; 
+    background-color: #1a1a1a;
+    color: #fff;
 }
+
+#json-data {
+    background-image: url('https://media2.giphy.com/media/A608loAlQgF4ag7k4m/giphy.gif?cid=6c09b952vhagzn9t9zcznwjusfc3o94h236aj60uvmag2pl5&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=g');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
 #listOfCommands, #listOfCommandsEvent, #prefixOfCommands, #adminOfCommands {
-  border: none !important;
+    border: none !important;
 }
 
 #listOfCommands:not(.modal), #listOfCommandsEvent:not(.modal), #prefixOfCommands:not(.modal), #adminOfCommands:not(.modal) {
-  box-shadow: none !important;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 
+.container h1 {
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    background-color: #222;
+    border-radius: 5px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+.container p {
+    line-height: 1.6;
+}
+
+.container ul {
+    padding-left: 20px;
+}
+
+.container ul li {
+    list-style: none;
+}
+
+.container ul li::before {
+    content: '\2022';
+    color: #007bff;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}
+
+.container ul li + li {
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .container h1 {
+        font-size: 18px;
+    }
+    video {
+    width: 100%;
+    border: 5px solid violet;
+     }

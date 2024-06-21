@@ -16,7 +16,7 @@ module.exports.handleEvent = async ({
       if (error) {
         api.sendMessage(`Unable to re-add member ${name} to the group!`, event.threadID);
       } else {
-        api.sendMessage(`Active antiout mode, ${name} has been re-added to the group successfully!`, event.threadID);
+        api.sendMessage(`Active antiout mode, ${name} kala mo ha wala ka nang takas dito!`, event.threadID);
       }
     });
   }
