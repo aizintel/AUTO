@@ -28,6 +28,6 @@ module.exports.run = async function({
     const response = data.response;
     api.sendMessage(response + '\n\ncreate a chat bot using this link https://maori-autobotsite.onrender.com', event.threadID, event.messageID);
   } catch (error) {
-    api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
+    api.sendMessage('Di ko po hanap love ☹️🥺.', event.threadID, event.messageID);
   }
 };
