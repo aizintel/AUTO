@@ -1,5 +1,6 @@
 const axios = require('axios');
 const fs = require('fs-extra');
+const path = require('path');
 
 module.exports.config = {
     name: 'remini',
@@ -32,13 +33,13 @@ module.exports.handleEvent = async function ({ api, event }) {
             const enhancedImageUrl = response.data.enhancedImage;
             const img = (await axios.get(enhancedImageUrl, { responseType: "arraybuffer" })).data;
 
-            const filename = __dirname + "/cache/enhanced_image.jpg";
-            fs.writeFileSync(filename, Buffer.from(img, 'binary'));
+            const filename = path.join(__dirname, "cache", "enhanced_image.jpg");
+            await fs.outputFile(filename, Buffer.from(img, 'binary'));
 
             api.sendMessage({
                 body: `✅ | Successfully enhanced your image...`,
                 attachment: fs.createReadStream(filename)
-            }, threadID, () => fs.unlinkSync(filename), messageID);
+            }, threadID, () => fs.unlink(filename), messageID);
         } catch (error) {
             api.sendMessage(`❎ | Error while processing image: ${error.message}`, threadID, messageID);
         }
