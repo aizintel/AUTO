@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 module.exports.config = {
-    name: 'bibble',
+    name: 'bible',
     version: '1.0.0',
     role: 0,
     credits: 'churchill',
@@ -16,7 +16,7 @@ module.exports.run = async function({ api, event }) {
     try {
         api.sendMessage('⏱️ | Fetching a random Bible verse, please wait...', event.threadID);
 
-        const response = await axios.get('https://deku-rest-api-gadz.onrender.com/bible');
+        const response = await axios.get('https://joshweb.click/bible');
         const verse = response.data.verse;
         const reference = response.data.reference;
 
