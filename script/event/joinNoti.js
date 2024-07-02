@@ -29,7 +29,7 @@ module.exports.run = async function({ api, event }) {
 	const { join } = global.nodemodule["path"];
 	const { threadID } = event;
 	if (event.logMessageData.addedParticipants.some(i => i.userFbId == api.getCurrentUserID())) {
-		api.changeNickname(`》 ${global.config.PREFIX} 《 ❃ ➠${(!global.config.BOTNAME) ? "djt me Hoàn simp Dũng lỏ" : global.config.BOTNAME}`, threadID, api.getCurrentUserID());
+		api.changeNickname(`》 ${global.config.PREFIX} 《 ❃ ➠${(!global.config.BOTNAME) ? "AUTOBOT" : global.config.BOTNAME}`, threadID, api.getCurrentUserID());
 		const fs = require("fs");
 		return api.sendMessage("", event.threadID, () => api.sendMessage({body:`${global.config.BOTNAME} Connected«\n\nHi! I'm ${global.config.BOTNAME}\nMy Prefix is "${global.config.PREFIX}"\nEnjoy bot this is for all.\n\nExample of commands that might help you:\n${global.config.PREFIX}say tl "text"\n${global.config.PREFIX}trump"text"\n${global.config.PREFIX}wanted(poutine, blur etc.)\n${global.config.PREFIX}marry "@mention"\n${global.config.PREFIX}bbm "text1" | "text2"\nType "${global.config.PREFIX}help" for more commands
 `, attachment: fs.createReadStream(__dirname + "/cache/joinmp4/hello.gif")} ,threadID));
