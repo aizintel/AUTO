@@ -83,53 +83,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
 
-
-    <script>
-        var encodedCredits = "QXV0b2JvdCBCeQpDaHVyY2hpbGwgQWJpbmc=";
-        
-        function showCredits() {
-            var decodedCredits = atob(encodedCredits);
-            var creditsDiv = document.createElement('div');
-            creditsDiv.style.fontSize = '25px';
-            creditsDiv.style.marginTop = '20px';
-            creditsDiv.innerHTML = decodedCredits.split('\n').map(function(item, idx) {
-                return `<span class="animated-text">${item}</span>`;
-            }).join('<br>');
-            document.body.appendChild(creditsDiv);
-            animateText();
-        }
-
-        function animateText() {
-            var animatedTexts = document.querySelectorAll('.animated-text');
-            animatedTexts.forEach(function(el) {
-                var text = el.textContent;
-                el.innerHTML = '';
-                for (var i = 0; i < text.length; i++) {
-                    var span = document.createElement('span');
-                    span.textContent = text[i];
-                    el.appendChild(span);
-                }
-            });
-            startColorAnimation();
-        }
-
-        function startColorAnimation() {
-            var colorArray = ["#FF0000", "#FF1100", "#FF2200", "#FF3300", "#FF4400", "#FF5500", "#FF6600", "#FF7700", "#FF8800", "#FF9900", "#FFaa00", "#FFbb00", "#FFcc00", "#FFdd00", "#FFee00", "#FFff00", "#FFee00", "#FFdd00", "#FFcc00", "#FFbb00", "#FFaa00", "#FF9900", "#FF8800", "#FF7700", "#FF6600", "#FF5500", "#FF4400", "#FF3300", "#FF2200", "#FF1100"];
-            var spans = document.querySelectorAll('.animated-text span');
-            var colorIndex = 0;
-
-            function updateColors() {
-                for (var i = 0; i < spans.length; i++) {
-                    spans[i].style.color = colorArray[(colorIndex + i) % colorArray.length];
-                }
-                colorIndex = (colorIndex + 1) % colorArray.length;
-                requestAnimationFrame(updateColors);
-            }
-
-            updateColors();
-        }
-
-        showCredits();
     </script>
 
     <audio src="https://i.imgur.com/4WT9tDo.mp4" autoplay loop></audio>
@@ -143,4 +96,13 @@
         </div>
         <script src="./index.js"></script>
     </body>
-                            </html>
+</html>
+<!-- AUTOBOT BY MAORI -->
+<div class="container" style="margin-top: 50px;">
+    <h1 class="col text-center" style="font-size: 20px; padding: 10px;">𝘈𝘜𝘛𝘖 𝘉𝘖𝘛 𝘉𝘠 MAORI</h1>
+    <img src="https://i.imgur.com/0w6o9YF.jpeg" alt="Developer Image" style="max-width: 100%;">
+    <p style="margin-top: 10px">
+        <p>𝘊𝘰𝘯𝘵𝘢𝘤𝘵 maori 𝘪𝘧 𝘵𝘩𝘦𝘳𝘦'𝘴 𝘴𝘰𝘮𝘦 𝘦𝘳𝘳𝘰𝘳 𝘤𝘭𝘪𝘤𝘬 𝘵𝘩𝘦 𝘧𝘣 𝘰𝘳 𝘮𝘦𝘴𝘴𝘦𝘯𝘨𝘦𝘳 𝘪𝘤𝘰𝘯</p>
+        <p><a href="https://www.facebook.com/maoricute" target="_blank"><img src="https://i.imgur.com/wICMefd.jpeg" alt="Facebook Icon" style="max-width: 30px;"></a> | <a href="https://m.me/Churchill.Dev4100" target="_blank"><img src="https://i.imgur.com/5IJTciO.jpeg" alt="Messenger Icon" style="max-width: 30px;"></a></p>
+    </p>
+    </div>
