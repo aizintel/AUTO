@@ -1,44 +1,33 @@
-module.exports = {
-    description: "Add a user to the thread or group chat",
-    role: "user",
-    credits: "user",
-    cooldown: 15,
-    coins: 2,
-    execute(api, event, args, commands) {
-        try {
-            if (args.length === 0) {
-                return api.sendMessage("Please provide a user ID or a link to add a user to the thread.", event.threadID, event.messageID);
-            }
+module.exports.config = {
+    name: "adduser",
+    version: "1.0.0",
+    role: 0,
+    credits: "chill",
+    description: "Add a user ",
+    hasPrefix: false,
+    aliases: ["add"],
+    usage: "[adduser <uid>]",
+    cooldown: 5
+};
 
-            const target = args[0].trim(); // Assuming the user ID or link is the first argument
-
-            // Check if the target is a user ID or a link
-            const userIDPattern = /^[0-9]+$/;
-            const linkPattern = /\/(user|profile|groups)\/([a-zA-Z0-9._]+)\/?/;
-
-            let userID;
-            if (userIDPattern.test(target)) {
-                userID = target;
-            } else {
-                const match = target.match(linkPattern);
-                if (!match || match.length < 3) {
-                    return api.sendMessage("Invalid user ID or link format.", event.threadID, event.messageID);
-                }
-                userID = match[2];
-            }
-
-            // Add the user to the thread or group chat
-            api.addUserToGroup(userID, event.threadID, err => {
-                if (err) {
-                    console.warn("Failed to add user:", err);
-                    api.sendMessage("Failed to add user. Please check the user ID or link and try again.", event.threadID, event.messageID);
-                } else {
-                    api.sendMessage("User added successfully.", event.threadID, event.messageID);
-                }
-            });
-        } catch (error) {
-            console.error("An unexpected error occurred:", error);
-            api.sendMessage("An unexpected error occurred while trying to add the user. Please try again later.", event.threadID, event.messageID);
+module.exports.run = async function({ api, event, args }) {
+    try {
+        const uid = args[0];
+        if (!uid) {
+            api.sendMessage("Usage: adduser <uid>", event.threadID);
+            return;
         }
+
+        api.addUserToGroup(uid, event.threadID, (err) => {
+            if (err) {
+                api.sendMessage(`Failed to add user with UID ${uid} to the group.`, event.threadID);
+                console.error('Error:', err);
+            } else {
+                api.sendMessage(`Successfully added user with UID ${uid} to the group.`, event.threadID);
+            }
+        });
+    } catch (error) {
+        console.error('Error:', error);
+        api.sendMessage("An error occurred while processing the request.", event.threadID);
     }
 };
