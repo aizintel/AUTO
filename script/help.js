@@ -25,15 +25,13 @@ module.exports.run = async function({
       let page = 1;
       let start = (page - 1) * pages;
       let end = start + pages;
-      let helpMessage = `╔⏤⏤⏤╝❀╚⏤⏤⏤╗
-     ⾕ | 𝗖𝗢𝗠𝗠𝗔𝗡𝗗𝗦\n\n`;
+      let helpMessage = `~ 𝗠𝗬 𝗔𝗩𝗔𝗜𝗟 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 𝗟𝗜𝗦𝗧:\n\n`;
       for (let i = start; i < Math.min(end, commands.length); i++) {
         helpMessage += `\╭─❍
 ➠ ${i + 1}.  ${prefix}${commands[i]} 
 ╰───────────⟡ \n`;
       }
-      helpMessage += '\n╔⏤⏤⏤╝❀╚⏤⏤⏤╗
-     ⾕ |  𝗘𝗩𝗘𝗡𝗧 𝗟𝗜𝗦𝗧\n\n';
+      helpMessage += '\n~ 𝗠𝗬 𝗘𝗩𝗘𝗡𝗧 𝗟𝗜𝗦𝗧:\n\n';
       eventCommands.forEach((eventCommand, index) => {
         helpMessage += `\╭─❍
 ➠ ${index + 1}.  ${prefix}${eventCommand} 
@@ -48,15 +46,13 @@ module.exports.run = async function({
       const pages = 20;
       let start = (page - 1) * pages;
       let end = start + pages;
-      let helpMessage = `╔⏤⏤⏤╝❀╚⏤⏤⏤╗
-     ⾕ | 𝗖𝗢𝗠𝗠𝗔𝗡𝗗𝗦\n\n`;
+      let helpMessage = `Command list\n\n`;
       for (let i = start; i < Math.min(end, commands.length); i++) {
         helpMessage += `\╭─❍
 ➠ ${i + 1}.  ${prefix}${commands[i]} 
 ╰───────────⟡ \n`;
       }
-      helpMessage += '\n╔⏤⏤⏤╝❀╚⏤⏤⏤╗
-     ⾕ |  𝗘𝗩𝗘𝗡𝗧 𝗟𝗜𝗦𝗧\n\n';
+      helpMessage += '\nEvent list:\n\n';
       eventCommands.forEach((eventCommand, index) => {
         helpMessage += `\╭─❍
 ➠ ${index + 1}.  ${prefix}${eventCommand} 
