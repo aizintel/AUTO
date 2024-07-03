@@ -27,13 +27,13 @@ module.exports.run = async function({
       let end = start + pages;
       let helpMessage = `~ 𝗠𝗬 𝗔𝗩𝗔𝗜𝗟 𝗖𝗢𝗠𝗠𝗔𝗡𝗗 𝗟𝗜𝗦𝗧:\n\n`;
       for (let i = start; i < Math.min(end, commands.length); i++) {
-        helpMessage += `\t╭─❍
+        helpMessage += `\╭─❍
 ➠ ${i + 1}.  ${prefix}${commands[i]} 
 ╰───────────⟡ \n`;
       }
       helpMessage += '\n~ 𝗠𝗬 𝗘𝗩𝗘𝗡𝗧 𝗟𝗜𝗦𝗧:\n\n';
       eventCommands.forEach((eventCommand, index) => {
-        helpMessage += `\t╭─❍
+        helpMessage += `\╭─❍
 ➠ ${index + 1}.  ${prefix}${eventCommand} 
 ╰───────────⟡ \n`;
       });
@@ -48,13 +48,13 @@ module.exports.run = async function({
       let end = start + pages;
       let helpMessage = `Command List:\n\n`;
       for (let i = start; i < Math.min(end, commands.length); i++) {
-        helpMessage += `\t╭─❍
+        helpMessage += `\╭─❍
 ➠ ${i + 1}.  ${prefix}${commands[i]} 
 ╰───────────⟡ \n`;
       }
       helpMessage += '\nEvent List:\n\n';
       eventCommands.forEach((eventCommand, index) => {
-        helpMessage += `\t╭─❍
+        helpMessage += `\╭─❍
 ➠ ${index + 1}.  ${prefix}${eventCommand} 
 ╰───────────⟡ \n`;
       });
