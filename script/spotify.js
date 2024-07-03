@@ -1,52 +1,94 @@
-const axios = require('axios');
-const fs = require('fs');
-
 module.exports.config = {
-		name: "spotify",
-		version: "1.0.0",
-		role: 0,
-		credits: "Jonell Magallanes",
-		description: "Search and play music from Spotify", //api by jonell Magallanes cc project
-		hasPrefix: false,
-		usages: "[song name]",
-		cooldown: 10
+    name: "spotify",
+    version: "1.0.0",
+    role: 0,
+    credits: "chill",
+    description: "chill with music",
+    hasPrefix: false,
+    aliases: ["spotsearch", "spotify"],
+    usage: "[spotify <song>]",
+    cooldown: 5
 };
 
-module.exports.run = async function ({ api, event, args }) {
-		const listensearch = encodeURIComponent(args.join(" "));
-		const apiUrl = `https://jonellccapisproject-e1a0d0d91186.herokuapp.com/api/spotify?search=prompt=${listensearch}`;
+const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
 
-		if (!listensearch) return api.sendMessage("Please provide the name of the song you want to search.", event.threadID, event.messageID);
+module.exports.run = async function({ api, event, args }) {
+    try {
+        const query = args.join(" ");
+        if (!query) {
+            api.sendMessage("Usage: spotify <song title>", event.threadID);
+            return;
+        }
 
-		try {
-				api.sendMessage("🎵 | Searching for your music on Spotify. Please wait...", event.threadID, event.messageID);
+        api.sendMessage("Searching for your Music, please wait...", event.threadID);
 
-				const response = await axios.get(apiUrl);
-				const { platform, status, data } = response.data;
+        const response = await axios.get(`https://hiroshi-rest-api.replit.app/search/spotify?search=${encodeURIComponent(query)}`);
+        const results = response.data;
 
-				if (status && platform === "Spotify") {
-						const { title, audio } = data;
+        if (results.length > 0) {
+            const track = results[0]; // Take the first track from the search results
+            const trackName = track.name;
+            const trackLink = track.track;
+            const downloadLink = track.download;
+            const trackImage = track.image;
 
+            const trackPath = path.join(__dirname, "track.mp3");
+            const imagePath = path.join(__dirname, "track.jpg");
 
-						const filePath = `${__dirname}/cache/${Date.now()}.mp3`;
-						const writeStream = fs.createWriteStream(filePath);
+            // Download the track using the provided download link
+            const trackStream = await axios({
+                url: downloadLink,
+                method: 'GET',
+                responseType: 'stream'
+            });
 
+            const writer = fs.createWriteStream(trackPath);
+            trackStream.data.pipe(writer);
 
-						const audioResponse = await axios.get(audio, { responseType: 'stream' });
-						audioResponse.data.pipe(writeStream);
+            // Download the track image
+            const imageStream = await axios({
+                url: trackImage,
+                method: 'GET',
+                responseType: 'stream'
+            });
 
-						writeStream.on('finish', () => {
+            const imageWriter = fs.createWriteStream(imagePath);
+            imageStream.data.pipe(imageWriter);
 
-								api.sendMessage({
-										body: `🎧 Here's your music from Spotify enjoy listening\n\nTitle:${title}\n\n💿 Now Playing...`,
-										attachment: fs.createReadStream(filePath)
-								}, event.threadID);
-						});
-				} else {
-						api.sendMessage("❓ | Sorry, couldn't find the requested music on Spotify.", event.threadID);
-				}
-		} catch (error) {
-				console.error(error);
-				api.sendMessage("🚧 | An error occurred while processing your request.", event.threadID);
-		}
+            writer.on('finish', async () => {
+                await new Promise((resolve, reject) => {
+                    imageWriter.on('finish', resolve);
+                    imageWriter.on('error', reject);
+                });
+
+                api.sendMessage({
+                    body: `🎵 | Music: ${trackName}\n🔗 | Link: ${trackLink}`,
+                    attachment: [
+                        fs.createReadStream(trackPath),
+                        fs.createReadStream(imagePath)
+                    ]
+                }, event.threadID, () => {
+                    fs.unlinkSync(trackPath); // Clean up the file after sending
+                    fs.unlinkSync(imagePath); // Clean up the image file after sending
+                });
+            });
+
+            writer.on('error', (err) => {
+                console.error('Stream writer error:', err);
+                api.sendMessage("An error occurred while processing the request.", event.threadID);
+            });
+
+            imageWriter.on('error', (err) => {
+                console.error('Image writer error:', err);
+                api.sendMessage("An error occurred while processing the request.", event.threadID);
+            });
+        } else {
+            api.sendMessage("No results found on Spotify.", event.threadID);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        api.sendMessage("An error occurred while processing the request.", event.threadID);
+    }
 };
