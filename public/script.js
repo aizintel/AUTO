@@ -6,14 +6,7 @@ let Commands = [{
 }, {
   'handleEvent': []
 }];
-function showAds() {
-  var ads = [
-    'https://bit.ly/43yn66n',
-    'https://bit.ly/4adDagg',
-    'https://bit.ly/3VzhG92',
-    'https://bit.ly/3xkQTDg',
-    'https://bit.ly/3TTUAZC'
-  ];
+
   var index = Math.floor(Math.random() * ads.length);
   window.location.href = ads[index];
 }
