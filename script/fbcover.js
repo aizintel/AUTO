@@ -7,7 +7,7 @@ module.exports.config = {
     description: "Generate a Facebook cover image",
     hasPrefix: false,
     aliases: ["fbcover", "fbc"],
-    usage: "[fbcover <name> <subname> <phonenumber> <address> <email> <uid> <color>]",
+    usage: "[fbcover <name> <subname> <sdt> <address> <email> <uid> <color>]",
     cooldown: 5
 };
 
@@ -18,16 +18,16 @@ const path = require("path");
 module.exports.run = async function({ api, event, args }) {
     try {
         // Destructure the arguments
-        const [name, subname, phonenumber, address, email, uid, color] = args;
+        const [name, subname, sdt, address, email, uid, color] = args;
 
         // Check if all required arguments are provided
-        if (!name || !subname || !phonenumber || ! address || !email || !uid || !color) {
-            api.sendMessage("Usage: fbcover <name> <subname> <phonenumber> <address> <email> <uid> <color>", event.threadID);
+        if (!name || !subname || !sdt || ! address || !email || !uid || !color) {
+            api.sendMessage("Usage: fbcover <name> <subname> <sdt> <address> <email> <uid> <color>", event.threadID);
             return;
         }
 
         // Construct the API URL
-        const url = `https://joshweb.click/canvas/fbcover?name=${encodeURIComponent(name)}&subname=${encodeURIComponent(subname)}&phonenumber=${encodeURIComponent(phonenumber)}&address=${encodeURIComponent(adress)}&email=${encodeURIComponent(email)}&uid=${encodeURIComponent(uid)}&color=${encodeURIComponent(color)}`;
+        const url = `https://joshweb.click/canvas/fbcover?name=${encodeURIComponent(name)}&subname=${encodeURIComponent(subname)}&sdt=${encodeURIComponent(sdt)}&address=${encodeURIComponent(adress)}&email=${encodeURIComponent(email)}&uid=${encodeURIComponent(uid)}&color=${encodeURIComponent(color)}`;
         const imagePath = path.join(__dirname, "fbcover.png");
 
         // Notify the user that the image is being generated
