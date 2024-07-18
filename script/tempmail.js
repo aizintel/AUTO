@@ -1,79 +1,62 @@
-const axios = require('axios');
+const axios = require("axios");
 
+module.exports = {
+  config: {
+    name: "tempmail",
+    version: "1.0",
+    author: "🤖",
+    countDown: 5,
+    role: 0,
+    shortDescription: {
+      en: "retrieve emails and inbox messages",
+      vi: "retrieve emails and inbox messages",
+    },
+    longDescription: {
+      en: "retrieve emails and inbox messages",
+      vi: "retrieve emails and inbox messages",
+    },
+    category: "tool",
+    guide: {
+      en: "{pn} gen\n{pn} inbox (email)",
+      vi: "{pn} gen\n{pn} inbox (email)",
+    },
+  },
 
-async function generateTempEmail() {
-  try {
-    const { data } = await axios.get('https://apis-samir.onrender.com/tempmail/get');
+  onStart: async function ({ api, args, event }) {
+    const command = args[0];
 
-    if (data && data.email) {
-      return data.email;
+    if (command === "gen") {
+      try {
+        const response = await axios.get("https://for-devs.onrender.com/api/mail/gen?apikey=api1");
+        const email = response.data.email;
+        return api.sendMessage(`𝗀𝖾𝗇𝖾𝗋𝖺𝗍𝖾𝖽 𝖾𝗆𝖺𝗂𝗅✉️: ${email}`, event.threadID);
+      } catch (error) {
+        console.error(error);
+        return api.sendMessage("Failed to generate email.", event.threadID);
+      }
+    } else if (command === "inbox") {
+      const email = args[1];
+
+      if (!email) {
+        return api.sendMessage("𝖯𝗋𝗈𝗏𝗂𝖽𝖾 𝖺𝗇 𝖾𝗆𝖺𝗂𝗅 𝖺𝖽𝖽𝗋𝖾𝗌𝗌 𝖿𝗈𝗋 𝗍𝗁𝖾 𝗂𝗇𝖻𝗈𝗑.", event.threadID);
+      }
+
+   try {
+        const inboxResponse = await axios.get(`https://for-devs.onrender.com/api/mail/inbox?email=${email}&apikey=api1`);
+        const inboxMessages = inboxResponse.data;
+
+        const formattedMessages = inboxMessages.map((message) => {
+          return `${message.date} - From: ${message.sender}\n${message.message}`;
+        });
+
+        return api.sendMessage(`𝗂𝗇𝖻𝗈𝗑 𝗆𝖾𝗌𝗌𝖺𝗀𝖾 𝖿𝗈𝗋 ${email}:\n\n${formattedMessages.join("\n\n")}\n\nOld messages will be deleted after some time.`, event.threadID);
+
+      } catch (error) {
+        console.error(error);
+        return api.sendMessage("𝖥𝖺𝗂𝗅𝖾𝖽 𝗍𝗈 𝗋𝖾𝗍𝗋𝗂𝖾𝗏𝖾 𝗂𝗇𝖻𝗈𝗑 𝗆𝖾𝗌𝗌𝖺𝗀𝖾.", event.threadID);
+      }
     } else {
-      throw new Error('Failed to generate temporary email: Invalid response from the API');
+      return api.sendMessage("Invalid command. Use {pn} gen or {pn} inbox (email).", event.threadID);
     }
-  } catch (error) {
-    throw new Error('Failed to generate temporary email: ' + error.message);
-  }
-}
-
-
-async function getInbox(email) {
-  try {
-    const { data } = await axios.get(`https://apis-samir.onrender.com/tempmail/inbox/${encodeURIComponent(email)}`);
-
-    if (Array.isArray(data)) {
-      return data;
-    } else {
-      throw new Error('Failed to fetch inbox messages: Invalid response from the API');
-    }
-  } catch (error) {
-    throw new Error('Failed to fetch inbox messages: ' + error.message);
-  }
-}
-
-module.exports.config = {
-  name: 'tempmail',
-  version: '1.0.0',
-  role: 0,
-  hasPrefix: true,
-  description: 'Generate a temporary email or check its inbox.',
-  usage: 'tempmail [create | inbox email]',
-  credits: 'Lorex',
-  cooldown: 3,
-};
-
-module.exports.run = async function({ api, event, args }) {
-  const subCommand = args[0];
-
-  if (subCommand === 'create') {
-    try {
-      const tempEmail = await generateTempEmail();
-      api.sendMessage(`Temporary email created\n\n${tempEmail}`, event.threadID, event.messageID);
-    } catch (error) {
-      api.sendMessage(error.message, event.threadID, event.messageID);
-      console.error(error);
-    }
-  } else if (subCommand === 'inbox') {
-    const email = args[1];
-
-    if (!email) {
-      api.sendMessage('Please provide an email to check its inbox.', event.threadID, event.messageID);
-      return;
-    }
-
-    try {
-      const inboxMessages = await getInbox(email);
-      let inboxText = 'Inbox Messages: 📬\n\n';
-
-      inboxMessages.forEach(message => {
-        inboxText += `📩 Sender: ${message.from}\n📨 Subject: ${message.subject}\n📝 Message: ${message.body}\n\n========================================\n\n`;
-      });
-
-      api.sendMessage(inboxText, event.threadID, event.messageID);
-    } catch (error) {
-      api.sendMessage(error.message, event.threadID, event.messageID);
-      console.error(error);
-    }
-  } else {
-    api.sendMessage(`Invalid sub-command. Usage: ${module.exports.config.usage}`, event.threadID, event.messageID);
   }
 };
