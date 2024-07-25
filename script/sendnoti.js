@@ -17,22 +17,17 @@ module.exports.run = async function ({ api, event, args, admin }) {
 	const threadList = await api.getThreadList(100, null, ["INBOX"]);
 	let sentCount = 0;
 	const custom = args.join(" ");
-	const uid = "61555814951548"; // UID ng may-ari ng bot sa Facebook
-
-	if (event.senderID !== uid) { // Suriin kung ang nagpadala ng command ay ang may-ari ng UID
-		return api.sendMessage("You are not authorized to use this command.", event.threadID, event.messageID);
-	}
 
 	async function sendMessage(thread) {
 		try {
 			await api.sendMessage(
-				`💛💚💙\n\n『 𝗠𝗘𝗦𝗦𝗔𝗚𝗘  𝗙𝗥𝗢𝗠 𝗗𝗘𝗩𝗘𝗟𝗢𝗣𝗘𝗥』\n\n𝘿𝙚𝙫 𝙣𝙖𝙢𝙚:Xio\n\n♡  ∩_∩\n（„• ֊ •„)♡\n╭─∪∪─────────⟡\n | 𝗠𝗲𝘀𝘀𝗮𝗴𝗲:「${custom}」\n ━━━━━━━━━━━━━━━━━`,
+`💛💚💙\n\n『 𝗠𝗘𝗦𝗦𝗔𝗚𝗘  𝗙𝗥𝗢𝗠 𝗗𝗘𝗩𝗘𝗟𝗢𝗣𝗘𝗥』\n\n𝘿𝙚𝙫 𝙣𝙖𝙢𝙚:Xio\n\n♡  ∩_∩\n（„• ֊ •„)♡\n╭─∪∪─────────⟡\n | 𝗠𝗲𝘀𝘀𝗮𝗴𝗲:「${custom}」\n ━━━━━━━━━━━━━━━━━`,
 				thread.threadID
 			);
 			sentCount++;
 
 			const content = `${custom}`;
-			const languageToSay = "tl"; 
+			const languageToSay = "fr"; 
 			const pathFemale = path.resolve(__dirname, "cache", `${thread.threadID}_female.mp3`);
 
 			await downloadFile(
@@ -80,4 +75,4 @@ async function downloadFile(url, filePath) {
 		writer.on('finish', resolve);
 		writer.on('error', reject);
 	});
-  }
+	}
