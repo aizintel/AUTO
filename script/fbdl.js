@@ -1,60 +1,41 @@
+const fs = require('fs');
+const axios = require('axios');
+const path = require('path');
+
 module.exports.config = {
   name: "fbdl",
-  version: "1.0.0", 
-  hasPermssion: 0,
-  credits: "𝙰𝚒𝚗𝚣",
-  description: "Facebook downloader",
-  usePrefix: false,
-  commandCategory: "random",
-  usages: "[facebookvideolink]",
-  cooldowns: 1,
+  version: "1.0.0",
+  hasPermission: 0,
+  credits: "Eugene Aguilar",
+  description: "Download Facebook video link",
+  commandCategory: "media",
+  usages: "fbdl [link]",
+  cooldowns: 8,
 };
 
-module.exports.run = async ({ api, event, args, Users }) => {
-  const axios = require("axios");
-  const request = require("request");
-  const fs = require("fs");
-  let link = args[0];
-  if (!args[0])
-    return api.sendMessage(
-      "[!] Need a tiktok link to proceed.\nUse " +
-        global.config.PREFIX +
-        this.config.name +
-        " [Facebook video link]",
-      event.threadID,
-      event.messageID
-    );
+module.exports.run = async function ({ api, event, args }) {
+  try {
+    const q = args.join(" ");
+    if (!q) {
+      api.sendMessage(`𝙿𝙻𝙴𝙰𝚂𝙴 𝙿𝚁𝙾𝚅𝙸𝙳𝙴 𝙰 𝚄𝚁𝙻 𝙵𝚁𝙾𝙼 𝙵𝙰𝙲𝙴𝙱𝙾𝙾𝙺.𝙲𝙾𝙼`, event.threadID, event.messageID);
+      return;
+    }
 
-  // Fetch user data to get the user's name
-  const senderInfo = await Users.getData(event.senderID);
-  const senderName = senderInfo.name;
+    api.sendMessage(`🕗 𝙿𝚁𝙾𝙲𝙴𝚂𝚂𝙸𝙽𝙶 𝙿𝙻𝙴𝙰𝚂𝙴 𝚆𝙰𝙸𝚃...`, event.threadID, event.messageID);
 
-  // Send initial message
-  api.sendMessage(
-    `🕟 | 𝙷𝚎𝚢 @${senderName}, 𝚈𝚘𝚞𝚛 𝚟𝚒𝚍𝚎𝚘 𝚒𝚜 𝚍𝚘𝚠𝚗𝚕𝚘𝚊𝚍𝚒𝚗𝚐, 𝙿𝚕𝚎𝚊𝚜𝚎 𝚠𝚊𝚒𝚝. . .`,
-    event.threadID,
-    event.messageID
-  );
+    const response = await axios.get(`https://hoanghao.me/api/facebook/download?url=${q}`);
+    const videoUrl = response.data.data.video;
+    const t = response.data.data.title;
 
-  axios.get(`https://joshweb.click/facebook?url=${link}`)
-    .then((res) => {
-      let callback = function () {
-        api.sendMessage(
-          `🟠 | 𝚅𝚒𝚍𝚎𝚘 𝚜𝚞𝚌𝚌𝚎𝚜𝚜𝚏𝚞𝚕𝚕𝚢 𝚍𝚘𝚠𝚗𝚕𝚘𝚊𝚍!, 𝚃𝚑𝚎 𝚟𝚒𝚍𝚎𝚘 𝚠𝚒𝚕𝚕 𝚋𝚎 𝚜𝚎𝚗𝚝 𝚒𝚗 𝚊 𝚏𝚎𝚠 𝚖𝚒𝚗𝚞𝚝𝚎𝚜, 𝚙𝚕𝚎𝚊𝚜𝚎 𝚠𝚊𝚒𝚝 𝚏𝚘𝚛 𝚊 𝚖𝚘𝚖𝚎𝚗𝚝 ${senderName}!`,
-          event.threadID
-        );
-        
-        api.sendMessage(
-          {
-            body: `✨ 𝙷𝚎𝚛𝚎\'𝚜 𝚢𝚘𝚞𝚛 𝚝𝚒𝚔𝚝𝚘𝚔 𝚟𝚒𝚍𝚎𝚘!`,
-            attachment: fs.createReadStream(__dirname + `/cache/fbdl.mp4`),
-          },
-          event.threadID,
-          () => fs.unlinkSync(__dirname + `/cache/fbdl.mp4`)
-        );
-      };
-      request(res.data.result)
-        .pipe(fs.createWriteStream(__dirname + `/cache/fbdl.mp4`))
-        .on("close", callback);
-    });
+    const pathie = path.join(__dirname, `cache`, `eurix.mp4`);
+
+const stream = await axios.get(videoUrl, { responseType: "arraybuffer"});
+
+    fs.writeFileSync(pathie, Buffer.from(stream.data, 'binary'));
+
+    await api.sendMessage({ body: `𝐕𝐨𝐢𝐜𝐢 𝐯𝐨𝐭𝐫𝐞 𝐯𝐢𝐝é𝐨\n\nTitle: ${t}`, attachment: fs.createReadStream(pathie) }, event.threadID, event.messageID);
+  } catch (e) {
+    api.sendMessage(`Error downloading Facebook video!!\n${e}`, event.threadID, event.messageID);
+    console.error(e); 
+  }
 };
