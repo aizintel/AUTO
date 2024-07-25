@@ -1,37 +1,39 @@
+const axios = require('axios');
+
 module.exports.config = {
     name: "gemini",
     role: 0,
-    credits: "churchill",
-    description: "Talk to Gemini (conversational)",
+    credits: "chill",
+    description: "Interact with Gemini",
     hasPrefix: false,
-    version: "5.6.7",
-    aliases: ["bard"],
-    usage: "gemini [prompt]",
-    cooldowns: 5,
+    version: "1.0.0",
+    aliases: ["gemini"],
+    usage: "gemini [reply to photo]"
 };
 
 module.exports.run = async function ({ api, event, args }) {
-    const axios = require("axios");
-    let prompt = args.join(" "),
-        uid = event.senderID,
-        url;
-    if (!prompt) return api.sendMessage(`Please enter a prompt.`, event.threadID);
+    const prompt = args.join(" ");
+
+    if (!prompt) {
+        return api.sendMessage('This cmd only works in photo.', event.threadID, event.messageID);
+    }
+
+    if (event.type !== "message_reply" || !event.messageReply.attachments[0] || event.messageReply.attachments[0].type !== "photo") {
+        return api.sendMessage('Please reply to a photo with this command.', event.threadID, event.messageID);
+    }
+
+    const url = encodeURIComponent(event.messageReply.attachments[0].url);
     api.sendTypingIndicator(event.threadID);
+
     try {
-        const geminiApi = `https://hiroshi-api-hub.replit.app`;
-        if (event.type == "message_reply") {
-            if (event.messageReply.attachments[0]?.type == "photo") {
-                url = encodeURIComponent(event.messageReply.attachments[0].url);
-                const res = (await axios.get(`${geminiApi}?prompt=${prompt}&url=${url}&uid=${uid}`)).data;
-                return api.sendMessage(res.gemini, event.threadID);
-            } else {
-                return api.sendMessage('Please reply to an image.', event.threadID);
-            }
-        }
-        const response = (await axios.get(`${geminiApi}?prompt=${prompt}&uid=${uid}`)).data;
-        return api.sendMessage(response.gemini, event.threadID);
+        await api.sendMessage('☄️ 𝑮𝑬𝑴𝑰𝑵𝑰\n━━━━━━━━━━━━━━━━━━\nGemini recognizing picture, please wait...\n━━━━━━━━━━━━━━━━━━', event.threadID);
+
+        const response = await axios.get(`https://joshweb.click/gemini?prompt=${encodeURIComponent(prompt)}&url=${url}`);
+        const description = response.data.gemini;
+
+        return api.sendMessage(`☄️ 𝑮𝑬𝑴𝑰𝑵𝑰\n━━━━━━━━━━━━━━━━━━\n${description}\n━━━━━━━━━━━━━━━━━━`, event.threadID, event.messageID);
     } catch (error) {
         console.error(error);
-        return api.sendMessage('❌ | An error occurred. You can try typing your query again or resending it. There might be an issue with the server that\'s causing the problem, and it might resolve on retrying.', event.threadID);
+        return api.sendMessage('❌ | An error occurred while processing your request.', event.threadID, event.messageID);
     }
 };
