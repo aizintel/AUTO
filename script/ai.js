@@ -7,7 +7,7 @@ module.exports.config = {
   aliases: ['gpt', 'openai'],
   description: "An AI command powered by GPT-4",
   usage: "Ai [promot]",
-  credits: 'Kyle敦. ဗီူ',
+  credits: 'xio',
   cooldown: 3,
 };
 module.exports.run = async function({
