@@ -1,72 +1,63 @@
 const axios = require('axios');
 
+const fonts = {
+    'a': "𝖺", 'b': "𝖻", 'c': "𝖼", 'd': "𝖽", 'e': "𝖾", 'f': "𝖿", 'g': "𝗀", 'h': "𝗁", 'i': "𝗂",
+    'j': "𝗃", 'k': "𝗄", 'l': "𝗅", 'm': "𝗆", 'n': "𝗇", 'o': "𝗈", 'p': "𝗉", 'q': "𝗊", 'r': "𝗋",
+    's': "𝗌", 't': "𝗍", 'u': "𝗎", 'v': "𝗏", 'w': "𝗐", 'x': "𝗑", 'y': "𝗒", 'z': "𝗓",
+    'A': "𝖠", 'B': "𝖡", 'C': "𝖢", 'D': "𝖣", 'E': "𝖤", 'F': "𝖥", 'G': "𝖦", 'H': "𝖧", 'I': "𝖨",
+    'J': "𝖩", 'K': "𝖪", 'L': "𝖫", 'M': "𝖬", 'N': "𝖭", 'O': "𝖮", 'P': "𝖯", 'Q': "𝖰", 'R': "𝖱",
+    'S': "𝖲", 'T': "𝖳", 'U': "𝖴", 'V': "𝖵", 'W': "𝖶", 'X': "𝖷", 'Y': "𝖸", 'Z': "𝖹",
+    ' ': " ", // Ensure spaces are properly handled
+    '.': ".", // Handle punctuation marks as needed
+    '?': "?",
+    '!': "!",
+    // Add other characters as necessary
+};
+
 module.exports.config = {
-  name: 'ai',
-  version: '1.0.0',
-  role: 0,
-  hasPrefix: false,
-  aliases: ['ai'],
-  description: "Ask AI a question",
-  usage: "ai [question]",
-  credits: 'churchill',
-  cooldown: 3,
+    name: 'ai',
+    version: '2',
+    role: 0,
+    hasPrefix: false,
+    aliases: ['anja', 's'],
+    description: "Command for AI-generated responses styled with special fonts.",
+    usage: "ex : ai [prompt]",
+    credits: 'aesther',
+    cooldown: 1,
 };
 
 module.exports.run = async function({ api, event, args }) {
-  const prompt = args.join(" ");
-  const threadID = event.threadID;
-  const senderID = event.senderID;
-  const messageID = event.messageID;
-
-  if (!prompt) {
-    api.sendMessage('Please provide a question, ex: ai what is love?', threadID, messageID);
-    return;
-  }
-
-  const responseMessage = await new Promise(resolve => {
-    api.sendMessage('🤖 𝙴𝙳𝚄𝙲 𝙱𝙾𝚃 𝙰𝙽𝚂𝚆𝙴𝚁𝙸𝙽𝙶...', threadID, (err, info) => {
-      if (err) {
-        console.error('Error sending message:', err);
+    const input = args.join(' ');
+    
+    if (!input) {
+        api.sendMessage(',🤖 𝙴𝙳𝚄𝙲 𝙱𝙾𝚃 𝙰𝙽𝚂𝚆𝙴𝚁𝙸𝙽𝙶... .', event.threadID, event.messageID);
+        api.setMessageReaction("🟡", event.messageID, () => {}, true);
         return;
-      }
-      resolve(info);
-    });
-  });
-
-  const apiUrl = `https://joshweb.click/new/gpt-3_5-turbo?prompt=${encodeURIComponent(prompt)}`;
-
-  try {
-    const startTime = Date.now();
-    const response = await axios.get(apiUrl);
-    const result = response.data;
-    const aiResponse = result.result.reply;
-    const endTime = Date.now();
-    const responseTime = ((endTime - startTime) / 1000).toFixed(2);
-
-    api.getUserInfo(senderID, async (err, ret) => {
-      if (err) {
-        console.error('Error fetching user info:', err);
-        await api.editMessage('Error fetching user info.', responseMessage.messageID);
-        return;
-      }
-
-      const userName = ret[senderID].name;
-      const formattedResponse = `🤖 𝙴𝙳𝚄𝙲 𝙱𝙾𝚃 𝙰𝙸
+    }
+    
+    try {
+        const { data } = await axios.get(`https://hiroshi-rest-api.replit.app/ai/jailbreak?ask=${encodeURIComponent(input)}`);
+        api.setMessageReaction("⭐", event.messageID, () => {}, true);
+        let response = data.response || 'No response received'; // Handling empty response
+        
+        // Replace characters with stylized characters from fonts
+        response = response.split('').map(char => {
+            return fonts[char.toLowerCase()] || char; // Use lowercase for lookup to match fonts object
+        }).join('');
+        
+        api.sendMessage(`🤖 𝙴𝙳𝚄𝙲 𝙱𝙾𝚃 𝙰𝙸
 ━━━━━━━━━━━━━━━━━━
+\`\`\`
 ${aiResponse}
+\`\`\`
 ━━━━━━━━━━━━━━━━━━
 🗣 𝙰𝚜𝚔𝚎𝚍 𝚋𝚢: ${userName}
-⏰ 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎 𝚃𝚒𝚖𝚎: ${responseTime}s`;
-
-      try {
-        await api.editMessage(formattedResponse, responseMessage.messageID);
-      } catch (error) {
-        console.error('Error editing message:', error);
-        api.sendMessage('Error editing message: ' + error.message, threadID, messageID);
-      }
-    });
-  } catch (error) {
-    console.error('Error:', error);
-    await api.editMessage('Error: ' + error.message, responseMessage.messageID);
-  }
+⏰ 𝚁𝚎𝚜𝚙𝚘𝚗𝚜𝚎 𝚃𝚒𝚖𝚎: ${responseTime}s`, event.threadID, event.messageID);
+        api.setMessageReaction("🟠", event.messageID, () => {}, true);
+        
+    } catch (error) {
+        console.error('Error:', error);
+        api.sendMessage('⚠️ Error Loading ⚠️', event.threadID, event.messageID);
+        api.setMessageReaction("🔴", event.messageID, () => {}, true);
+    }
 };
