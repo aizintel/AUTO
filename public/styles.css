@@ -1,53 +1,61 @@
 body {
      padding: 20px;
-     background-color: #f8f9fa;
+     background-color: black;
      font-family: 'Poppins', sans-serif;
 }
  .container {
-     background-color: #ffffff;
-     border-radius: 10px;
-     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+     background-color: black;
+     border-radius: 15px;
+     color: white;
      padding: 20px;
      margin-top: 20px;
      margin-bottom: 20px;
+     border: 2px solid green;
 }
  h1 {
-     color: #343a40;
+     color: white;
 }
  label {
-     color: #495057;
+     color: red;
 }
  .centered-textarea {
      display: block;
      margin: 0 auto;
      width: 100%;
-     min-height: 150px;
+     min-height: 130px;
      padding: 10px;
+     color: white;
+     font-family: Courier New;
      box-sizing: border-box;
-     border: 1px solid #ced4da;
+     border: 1px solid green;
      border-radius: 5px;
      resize: none;
+     outline: none;
+     background-color: rgba(210,210,210,0.382);
 }
  .btn-primary {
-     background-color: #007bff;
-     border: 1px solid #007bff;
+     background-color: #00873a;
+     border: 1px solid #00873a;
+     height: 40px;
+     width: 100%;
+     border-radius: 6px;
+     margin-bottom: 10px;
 }
  .btn-primary:hover {
-     background-color: #0056b3;
-     border: 1px solid #0056b3;
+     background-color: #005328f5;
+     border: 1px solid #005328f5;
 }
  .success-message {
      color: green;
      margin-top: 10px;
 }
  .footer {
-     background-color: rgba(255, 255, 255, 0.7);
+     background-color: rgba(255,255,255,0);
      padding: 10px;
      text-align: center;
      font-size: 16px;
-     color: #555;
+     color: green;
      margin-top: 50px;
-     border-top: 1px solid #ccc;
      position: fixed;
      bottom: 0;
      left: 0;
@@ -72,7 +80,7 @@ body {
      border-radius: 5px;
 }
  .center-placeholder::placeholder {
-     text-align: center;
+     color: white;
 }
 
 .form-check {
@@ -103,14 +111,14 @@ body {
 }
 
 #inputOfPrefix, #inputOfAdmin {
-  padding: 13px;
+  padding: 10px;
   width: 200px;
-  border: 1px solid #ccc;
+  border: 1px solid green;
   border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease; 
-  border-color: #ccc;
-  background-color: #fff;
+  color: white;
+  font-family: Courier New;
+  outline: none;
+  background-color: rgba(210,210,210,0.382);
 }
 #listOfCommands, #listOfCommandsEvent, #prefixOfCommands, #adminOfCommands {
   border: none !important;
@@ -119,4 +127,22 @@ body {
 #listOfCommands:not(.modal), #listOfCommandsEvent:not(.modal), #prefixOfCommands:not(.modal), #adminOfCommands:not(.modal) {
   box-shadow: none !important;
 }
-
+.version {
+  color: red;
+  font-family: Courier New;
+  font-size: 10px;
+  position: relative;
+  position: absolute;
+  top: 25px;
+  right: 30px;
+}
+h2 {
+  color: green;
+  font-family: Courier New;
+  text-align: center;
+}
+img {
+  height: 30px;
+  width: 30px;
+  border-radius: 100%;
+}

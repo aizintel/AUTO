@@ -1,42 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
    <head>
-      <title>Active</title>
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+      <title>Active Sessions</title>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <link rel="stylesheet" href="styles.css">
    </head>
    <body>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-         <a class="navbar-brand" href="#">Active</a>
-         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-         <span class="navbar-toggler-icon"></span>
-         </button>
-         <div class="collapse navbar-collapse justify-content-end" id="navbarNav" style="margin-right: 80px;">
-            <ul class="navbar-nav">
-               <li class="nav-item active">
-                  <a class="nav-link" href="#">Active<span class="sr-only">(current)</span>
-                  </a>
-               </li>
-               <li class="nav-item">
-                  <a class="nav-link" href="/">Home</a>
-               </li>
-               <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Features </a>
-                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                     <a class="dropdown-item" href="#">Cookies Extractor</a>
-                     <div class="dropdown-divider"></div>
-                     <a class="dropdown-item" href="/step_by_step_guide">Step-by-Step Guide</a>
-                  </div>
-               </li>
-            </ul>
-         </div>
-      </nav>
       <div class="container">
          <div class="row">
-            <h1 class="col text-start" style="margin-left: 12px; font-size: 20px;">Current Online:</h1>
+            <h1 class="col text-start" style="margin-left: 12px; font-size: 25px; text-align: center; color: green; font-family: Courier New;">CURRENTLY ONLINE</h1>
          </div>
          <div class="row" id="user_online"></div>
       </div>
@@ -45,7 +17,7 @@
          display: flex;
          align-items: center;
          margin-bottom: 10px;
-         border: 1px solid #dee2e6;
+         border: 1px solid green;
          border-radius: 10px;
          padding: 5px;
          width: 100%;
@@ -75,6 +47,7 @@
          font-size: 16px;
          white-space: nowrap;
          overflow: hidden;
+         color: white;
          text-overflow: ellipsis;
          text-align: start;
          }
@@ -83,13 +56,16 @@
          font-size: 12px;
          white-space: nowrap;
          overflow: hidden;
+         color: white;
          text-overflow: ellipsis;
          text-align: start;
          }
          p {
          padding: 3px;
+         color: white;
          }
          p.uptime-user {
+           color: white;
          }
       </style>
       <script>
@@ -170,9 +146,5 @@
          listOfAi();
          
       </script>
-      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
    </body>
 </html>
