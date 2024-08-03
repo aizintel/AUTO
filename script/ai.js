@@ -23,8 +23,6 @@ module.exports.run = async function({ api, event, args }) {
     return;
   }
   
-  api.sendMessage(`🔍 "${input}"`, event.threadID, event.messageID);
-
   if (input === "clear") {
     try {
       await axios.post('https://gpt-4-cfgh.onrender.com/clear', { id: event.senderID });
@@ -34,6 +32,8 @@ module.exports.run = async function({ api, event, args }) {
     }
   }
 
+  api.sendMessage(`🔍 "${input}"`, event.threadID, event.messageID);
+  
   try {
     const url = event.type === "message_reply" && event.messageReply.attachments[0]?.type === "photo"
       ? { link: event.messageReply.attachments[0].url }
