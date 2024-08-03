@@ -19,8 +19,11 @@ module.exports.run = async function({ api, event, args }) {
   const input = args.join(' ');
 
   if (!input) {
-    return api.sendMessage("Please provide a question or statement after 'ai'.", event.threadID, event.messageID);
+    api.sendMessage(`Please provide a question or statement after 'ai'. For example: 'ai What is the capital of France?'`, event.threadID, event.messageID);
+    return;
   }
+  
+  api.sendMessage(`🔍 "${input}"`, event.threadID, event.messageID);
 
   if (input === "clear") {
     try {
