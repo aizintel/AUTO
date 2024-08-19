@@ -25,7 +25,7 @@ module.exports.run = async function({ api, event, args }) {
   
   if (input === "clear") {
     try {
-      await axios.post('https://gpt-4-cfgh.onrender.com/clear', { id: event.senderID });
+      await axios.post('https://satomoigpt.onrender.com/clear', { id: event.senderID });
       return api.sendMessage("Chat history has been cleared.", event.threadID, event.messageID);
     } catch {
       return api.sendMessage('An error occurred while clearing the chat history.', event.threadID, event.messageID);
@@ -39,7 +39,7 @@ module.exports.run = async function({ api, event, args }) {
       ? { link: event.messageReply.attachments[0].url }
       : {};
 
-    const { data } = await axios.post('https://gpt-4-cfgh.onrender.com/chat', {
+    const { data } = await axios.post('https://satomoigpt.onrender.com/chat', {
       prompt: input,
       customId: event.senderID,
       ...url
