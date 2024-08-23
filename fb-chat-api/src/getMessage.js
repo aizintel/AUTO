@@ -8,7 +8,7 @@
 var utils = require("../utils");
 var log = require("npmlog");
 
-
+// 写的真好
 function formatMessage(threadID, data) {
 	switch (data.__typename) {
 		case "ThreadNameMessage":
