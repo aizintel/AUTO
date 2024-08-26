@@ -45,7 +45,11 @@ module.exports.run = async function({ api, event, args }) {
       ...url
     });
 
-    api.sendMessage(`${data.message}\n\nType "ai clear" to reset the conversation.`, event.threadID, event.messageID);
+    api.sendMessage(`${data.message}`, event.threadID, (err, messageInfo) => {
+      if (err) return;
+      api.sendMessage('For more updates, follow and check this account: https://www.facebook.com/soyeon.intel', event.threadID)
+    }, event.messageID);
+    
   } catch {
     api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
   }
