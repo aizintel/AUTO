@@ -49,7 +49,7 @@ module.exports.run = async function({ api, event, args }) {
       if (err) return;
 const now = new Date(); 
 const formattedDate = now.toLocaleString('en-US', { timeZone: 'Asia/Manila' }); 
-api.sendMessage(`For the latest updates, please follow my account. The total answered questions are ${count}. As of ${formattedDate}.`);
+api.sendMessage(`For the latest updates, please follow my account. The total answered questions are ${data.count}. As of ${formattedDate}.`);
 
     }, event.messageID);
     
