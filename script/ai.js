@@ -47,7 +47,10 @@ module.exports.run = async function({ api, event, args }) {
 
     api.sendMessage(`${data.message}`, event.threadID, (err, messageInfo) => {
       if (err) return;
-      api.sendMessage('For more updates, follow and check this account: https://www.facebook.com/soyeon.intel', event.threadID)
+const now = new Date(); 
+const formattedDate = now.toLocaleString('en-US', { timeZone: 'Asia/Manila' }); 
+api.sendMessage(`For the latest updates, please follow my account. The total answered questions are ${count}. As of ${formattedDate}.`);
+
     }, event.messageID);
     
   } catch {
