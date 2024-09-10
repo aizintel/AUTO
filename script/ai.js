@@ -45,13 +45,7 @@ module.exports.run = async function({ api, event, args }) {
       ...url
     });
 
-    api.sendMessage(`${data.message}`, event.threadID, (err, messageInfo) => {
-      if (err) return;
-const now = new Date(); 
-const formattedDate = now.toLocaleString('en-US', { timeZone: 'Asia/Manila' }); 
-api.sendMessage(`For the latest updates, please follow my account. The total answered questions are ${data.count}. As of ${formattedDate}.`, event.threadID);
-
-    }, event.messageID);
+    api.sendMessage(`${data.message}`, event.threadID, event.messageID);
     
   } catch {
     api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
