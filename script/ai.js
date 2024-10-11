@@ -32,7 +32,12 @@ module.exports.run = async function({ api, event, args }) {
     }
   }
 
-  const chatInfo = await api.sendMessage(`🔍 "${input}"`, event.threadID, event.messageID);
+
+  let chatInfoMessageID = "";
+  
+  api.sendMessage(`🔍 "${input}"`, event.threadID, (error, chatInfo) => {
+    chatInfoMessageID = chatInfo.messageID;
+  },event.messageID);
 
   try {
     const url = (event.type === "message_reply" && event.messageReply.attachments[0]?.type === "photo")
@@ -45,7 +50,7 @@ module.exports.run = async function({ api, event, args }) {
       ...url
     });
 
-    api.editMessage(`${data.message}`, chatInfo.messageID, (err) => {
+    api.editMessage(`${data.message}`, chatInfoMessageID, (err) => {
       if (err) {
         console.error(err);
       }
