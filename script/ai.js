@@ -32,7 +32,7 @@ module.exports.run = async function({ api, event, args }) {
     }
   }
 
-  api.sendMessage(`🔍 "${input}"`, event.threadID, event.messageID);
+
   
   try {
     const url = event.type === "message_reply" && event.messageReply.attachments[0]?.type === "photo"
@@ -45,7 +45,20 @@ module.exports.run = async function({ api, event, args }) {
       ...url
     });
 
-    api.sendMessage(`${data.message}`, event.threadID, event.messageID);
+
+    api.sendMessage(`🔍 "${input}"`, event.threadID, (err, messageInfo) => {
+    if (err) {
+        return console.error(err);
+    }
+    
+    api.editMessage(`${data.message}`, messageInfo.messageID, (err, obj) => {
+        if (err) {
+            return console.error(err.error);
+        }
+        console.log(obj);
+    });
+}, event.messageID);
+
     
   } catch {
     api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
