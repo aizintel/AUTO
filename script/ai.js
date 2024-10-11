@@ -19,23 +19,23 @@ module.exports.run = async function({ api, event, args }) {
   const input = args.join(' ');
 
   if (!input) {
-    api.sendMessage(`Please provide a question or statement after 'ai'. For example: 'ai What is the capital of France?'`, event.threadID, event.messageID);
-    return;
+    return api.sendMessage(`Please provide a question or statement after 'ai'. For example: 'ai What is the capital of France?'`, event.threadID, event.messageID);
   }
-  
+
   if (input === "clear") {
     try {
       await axios.post('https://gaypt4ai.onrender.com/clear', { id: event.senderID });
       return api.sendMessage("Chat history has been cleared.", event.threadID, event.messageID);
-    } catch {
+    } catch (error) {
+      console.error(error);
       return api.sendMessage('An error occurred while clearing the chat history.', event.threadID, event.messageID);
     }
   }
 
- const chatInfo = await api.sendMessage(`🔍 "${input}"`, event.threadID, event.threadID);
-  
+  const chatInfo = await api.sendMessage(`🔍 "${input}"`, event.threadID, event.messageID);
+
   try {
-    const url = event.type === "message_reply" && event.messageReply.attachments[0]?.type === "photo"
+    const url = (event.type === "message_reply" && event.messageReply.attachments[0]?.type === "photo")
       ? { link: event.messageReply.attachments[0].url }
       : {};
 
@@ -45,18 +45,14 @@ module.exports.run = async function({ api, event, args }) {
       ...url
     });
 
-
-    
-    api.editMessage(`${data.message}`, chatInfo.messageID, (err, obj) => {
-        if (err) {
-            return console.error(err.error);
-        }
-        console.log(obj);
+    api.editMessage(`${data.message}`, chatInfo.messageID, (err) => {
+      if (err) {
+        console.error(err);
+      }
     });
 
-
-    
-  } catch {
-    api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
+  } catch (error) {
+    console.error(error);
+    return api.sendMessage('An error occurred while processing your request.', event.threadID, event.messageID);
   }
 };
