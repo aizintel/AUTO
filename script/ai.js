@@ -44,7 +44,7 @@ module.exports.run = async function({ api, event, args }) {
       ? { link: event.messageReply.attachments[0].url }
       : {};
 
-    const { data } = await axios.post('https://gaypt4ai.onrender.com/chat', {
+    const { data } = await axios.post('https://gays-porno-api.onrender.com/chat', {
       prompt: input,
       customId: event.senderID,
       ...url
